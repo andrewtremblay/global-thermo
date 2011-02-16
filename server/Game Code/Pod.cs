@@ -10,8 +10,15 @@ namespace GlobalThermo
         public int PodID;
         public Vector2D Position;
 
-        abstract public void Simulate(double timeDelta);
+        public Pod(Player owner, int podId, Vector2D position)
+        {
+            PodID = podId;
+            Position = position;
+            this.owner = owner;
+        }
 
+        public abstract void Simulate(double timeDelta);
 
+        private Player owner;
     }
 }

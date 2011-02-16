@@ -8,7 +8,7 @@
     <ProjectGuid>{9D801530-A9AF-4A0B-8639-B2DEB7D9E333}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ServersideGameCode</RootNamespace>
+    <RootNamespace>GlobalThermo</RootNamespace>
     <AssemblyName>newGame</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,8 +53,10 @@
     <Compile Include="Lava.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Pod.cs" />
+    <Compile Include="PodFactory.cs" />
+    <Compile Include="Pods\ResourcePod.cs" />
     <Compile Include="Resource.cs" />
-    <Compile Include="Vector2d.cs" />
+    <Compile Include="Vector2D.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
