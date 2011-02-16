@@ -10,10 +10,10 @@ namespace DevelopmentTestServer {
 			// (Uncomment line to start server and make it simulate the user 'bob' connecting for 30 seconds)
 			// (this is an easy way to debug serverside code)
 			//
-			// PlayerIO.DevelopmentServer.Server.StartWithDebugging("<Enter your gameid here>", "public", "MyCode", "bob", "", 30000);
+            PlayerIO.DevelopmentServer.Server.StartWithDebugging("global-thermo-yqmb5es6x0y5gshrcwrzcw", "public", "MyCode", "bob", "", 30000);
 
 			// Start the server and wait for incomming connection
-			PlayerIO.DevelopmentServer.Server.StartWithDebugging();
+			//PlayerIO.DevelopmentServer.Server.StartWithDebugging();
 		}
 	}
 }

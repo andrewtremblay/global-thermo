@@ -47,7 +47,15 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Atmosphere.cs" />
     <Compile Include="Game.cs" />
+    <Compile Include="IGameEntity.cs" />
+    <Compile Include="Lava.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Pod.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="Vector2d.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -5,10 +5,7 @@ using System.Collections;
 using PlayerIO.GameLibrary;
 using System.Drawing;
 
-namespace MyGame {
-	public class Player : BasePlayer {
-		public string Name;
-	}
+namespace GlobalThermo {
 
 	[RoomType("MyCode")]
 	public class GameCode : Game<Player> {
@@ -34,6 +31,17 @@ namespace MyGame {
 				RefreshDebugView(); 
 			}, 250);
 		}
+
+
+        // Player operations
+            // Vote for game speed change
+            // Create a pod
+            // Destroy a pod
+            // Modify a resource collector's rate
+            // Aim + Fire a weapon pod
+            // Chat
+        // Server notifications
+
 
 		// This method is called when the last player leaves the room, and it's closed down.
 		public override void GameClosed() {
