@@ -54,6 +54,7 @@
     <Compile Include="Player.cs" />
     <Compile Include="Pod.cs" />
     <Compile Include="PodFactory.cs" />
+    <Compile Include="Pods\ResidencePod.cs" />
     <Compile Include="Pods\ResourcePod.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="Vector2D.cs" />
