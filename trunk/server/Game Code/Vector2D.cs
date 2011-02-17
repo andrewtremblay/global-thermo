@@ -97,5 +97,14 @@ namespace GlobalThermo
         {
             return new Vector2D(-u.x, -u.y);
         }
+
+        public double Magnitude()
+        {
+            return Math.Sqrt(x * x + y * y);
+        }
+        public double MagnitudeSquared()
+        {
+            return x * x + y * y;
+        }
     }
 }

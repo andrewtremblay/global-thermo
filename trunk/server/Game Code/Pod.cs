@@ -5,20 +5,33 @@ using System.Text;
 
 namespace GlobalThermo
 {
+    public enum PodType
+    {
+        Residence,
+        Resource,
+        Defense,
+        Branch
+    }
+
     public abstract class Pod : IGameEntity
     {
+        public const double Radius = 10;
+
         public int PodID;
         public Vector2D Position;
+        public PodType Type;
+        public bool Connectable;
 
         public Pod(Player owner, int podId, Vector2D position)
         {
             PodID = podId;
             Position = position;
             this.owner = owner;
+            Connectable = true;
         }
 
         public abstract void Simulate(double timeDelta);
 
-        private Player owner;
+        protected Player owner;
     }
 }
