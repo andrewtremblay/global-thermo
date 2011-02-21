@@ -1,4 +1,5 @@
 using System;
+using global_thermo.Game.Screen;
 
 namespace global_thermo
 {
@@ -10,10 +11,10 @@ namespace global_thermo
         /// </summary>
         static void Main(string[] args)
         {
-            using (GlobalThermoGame game = new GlobalThermoGame())
-            {
-                game.Run();
-            }
+            GlobalThermoGame game = null;
+            game = new GlobalThermoGame();
+            game.SetScreen(new TitleScreen(game));
+            game.Run();
         }
     }
 #endif

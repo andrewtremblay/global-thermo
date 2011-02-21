@@ -107,9 +107,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\Camera.cs" />
+    <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Game\Pod\Pod.cs" />
+    <Compile Include="Game\Screen\Screen.cs" />
+    <Compile Include="Game\Screen\TitleScreen.cs" />
+    <Compile Include="Game\Sprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Game1.cs" />
+    <Compile Include="Game\GlobalThermoGame.cs" />
+    <Compile Include="Util\GTMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
@@ -148,9 +155,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="pods\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--
