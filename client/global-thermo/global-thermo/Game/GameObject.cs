@@ -44,10 +44,20 @@ namespace global_thermo.Game
             }
         }
 
+        public string DebugName = "unnamed object";
+
         public GameObject(GlobalThermoGame game)
         {
             this.game = game;
             Children = new List<GameObject>();
+        }
+
+        public virtual void Initialize()
+        {
+            foreach (GameObject child in Children)
+            {
+                child.Initialize();
+            }
         }
 
         public virtual void Update(double deltaTime)
@@ -58,11 +68,11 @@ namespace global_thermo.Game
             }
         }
 
-        public virtual void Render()
+        public virtual void Render(Matrix transform)
         {
             foreach (GameObject child in Children)
             {
-                child.Render();
+                child.Render(transform);
             }
         }
 
