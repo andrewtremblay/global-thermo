@@ -17,10 +17,14 @@ namespace global_thermo.Game.Screen
 
         public override void Initialize()
         {
-            base.Initialize();
 
             NetManager.GetInstance().NetConnection.OnMessage += new MessageReceivedEventHandler(net_HandleMessages);
             NetManager.GetInstance().NetConnection.OnDisconnect += new DisconnectEventHandler(net_HandleDisconnect);
+
+            cursor = new Cursor(game);
+            InterfaceChildren.Add(cursor);
+
+            base.Initialize();
         }
 
         private void net_HandleMessages(object sender, Message e)
@@ -53,5 +57,6 @@ namespace global_thermo.Game.Screen
         }
 
         private Landmass land;
+        private Cursor cursor;
     }
 }
