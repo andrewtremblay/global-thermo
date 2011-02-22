@@ -10,11 +10,12 @@ namespace global_thermo.Game
     class Landmass : Sprite
     {
         public List<Vector2> Points;
+
         public Landmass(GlobalThermoGame game, int radius, List<Vector2> points)
             : base(game)
         {
             Points = points;
-            //texture = new Texture2D(game.GraphicsDevice, radius * 2 + 200, radius * 2 + 200);
+            cameraEffect = new BasicEffect(game.GraphicsDevice);
         }
 
         public override void Render(Matrix transform)
@@ -28,7 +29,6 @@ namespace global_thermo.Game
             pointList[0] = new VertexPositionColorTexture(new Vector3(rectPosition.X, rectPosition.Y, 0), color, new Vector2(0, 0));
             int i = 1;
 
-            BasicEffect cameraEffect = new BasicEffect(game.GraphicsDevice);
             cameraEffect.World = Matrix.Identity;
             Matrix proj = Matrix.CreateOrthographicOffCenter(
                 0,game.GraphicsManager.PreferredBackBufferWidth,game.GraphicsManager.PreferredBackBufferHeight,0,0,-1f) ;
@@ -70,5 +70,7 @@ namespace global_thermo.Game
                     numpts - 1   // number of primitives to draw
                 );
         }
+
+        private BasicEffect cameraEffect;
     }
 }
