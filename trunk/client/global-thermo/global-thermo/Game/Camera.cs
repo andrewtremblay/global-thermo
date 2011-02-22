@@ -12,18 +12,22 @@ namespace global_thermo.Game
         public Vector2 Center;
         public double Zoom;
 
-        public Camera(Vector2 center)
+        public Camera(Vector2 center, Vector2 windowSize)
         {
             Center = center;
+            Zoom = 1.0;
+            this.windowSize = windowSize;
         }
 
         public Matrix GetTransform()
         {
             // Make an identity matrix, translate it, zoom it
-            Matrix mtx = new Matrix();
-            mtx.Translation = new Vector3(Center.X, Center.Y, 0);
+            Matrix mtx = Matrix.Identity;
+            mtx.Translation = new Vector3(Center.X - windowSize.X / 2, Center.Y - windowSize.Y / 2, 0);
             mtx = Matrix.Multiply(mtx, (float)Zoom);
             return mtx;
         }
+
+        protected Vector2 windowSize;
     }
 }

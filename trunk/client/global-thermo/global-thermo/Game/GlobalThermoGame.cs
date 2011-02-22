@@ -17,17 +17,28 @@ namespace global_thermo
     /// </summary>
     public class GlobalThermoGame : Microsoft.Xna.Framework.Game
     {
-        public GraphicsDeviceManager Graphics;
+        public GraphicsDeviceManager GraphicsManager;
+        public SpriteBatch batch;
 
         public GlobalThermoGame()
         {
             Content.RootDirectory = "Content";
-            Graphics = new GraphicsDeviceManager(this);
+            GraphicsManager = new GraphicsDeviceManager(this);
+            screen = null;
         }
 
         public void SetScreen(Screen screen)
         {
-            this.screen = screen;
+            if (this.screen != null)
+            {
+                // previous screen clean-up?
+                this.screen = screen;
+                screen.Initialize();
+            }
+            else
+            {
+                this.screen = screen;
+            }
         }
 
         protected override void Initialize()
@@ -38,8 +49,8 @@ namespace global_thermo
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            //spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            batch = new SpriteBatch(GraphicsDevice);
+            screen.Initialize();
         }
 
         protected override void UnloadContent()
@@ -61,7 +72,7 @@ namespace global_thermo
             GraphicsDevice.Clear(Color.CornflowerBlue);
             if (screen != null)
             {
-                screen.Render();
+                screen.Render(Matrix.Identity);
             }
             base.Draw(gameTime);
         }
