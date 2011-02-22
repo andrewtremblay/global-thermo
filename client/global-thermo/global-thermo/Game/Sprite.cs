@@ -47,6 +47,6 @@ namespace global_thermo.Game
             }
         }
 
-        private Texture2D texture;
+        protected Texture2D texture;
     }
 }

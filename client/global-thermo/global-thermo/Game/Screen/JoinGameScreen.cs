@@ -30,11 +30,11 @@ namespace global_thermo.Game.Screen
         public void Connect()
         {
             haveConnected = true;
-            var client = PlayerIO.Connect("global-thermo-yqmb5es6x0y5gshrcwrzcw","public","tester",null);
-            var connection = client.Multiplayer.CreateJoinRoom("public", "bounce", true, null, null);
 
-            connection.OnMessage += new MessageReceivedEventHandler(net_OnMessage);
-            connection.OnDisconnect += new DisconnectEventHandler(net_OnDisconnect);
+            NetManager.GetInstance().Connect("morgan", "public");
+
+            NetManager.GetInstance().NetConnection.OnMessage += new MessageReceivedEventHandler(net_HandleMessages);
+            NetManager.GetInstance().NetConnection.OnDisconnect += new DisconnectEventHandler(net_HandleDisconnect);
         }
 
         public override void Update(double deltaTime)
@@ -53,14 +53,17 @@ namespace global_thermo.Game.Screen
         }
 
 
-        private void net_OnMessage(object sender, Message e)
+        private void net_HandleMessages(object sender, Message e)
         {
-            Console.WriteLine(e);
+            if (e.Type == "Join")
+            {
+                game.SetScreen(new GameScreen(game));
+            }
         }
 
-        private void net_OnDisconnect(object sender, string message)
+        private void net_HandleDisconnect(object sender, string message)
         {
-            Console.WriteLine(message);
+            
         }
 
         private bool haveRendered;

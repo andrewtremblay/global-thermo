@@ -9,6 +9,11 @@ namespace GlobalThermo
     {
         public double Height;
 
+        public Lava(double height)
+        {
+            Height = height;
+        }
+
         public void Simulate(double timeDelta)
         {
 

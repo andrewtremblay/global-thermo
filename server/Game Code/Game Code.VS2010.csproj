@@ -72,8 +72,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>"C:\Users\morganquirk\Desktop\global-thermo\server\Player.IO Test Server Project\bin\Debug\Test Server.exe"</PostBuildEvent>
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
