@@ -113,7 +113,10 @@
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Game\Cursor.cs" />
     <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Game\Landmass.cs" />
+    <Compile Include="Game\NetManager.cs" />
     <Compile Include="Game\Pod\Pod.cs" />
+    <Compile Include="Game\Screen\GameScreen.cs" />
     <Compile Include="Game\Screen\JoinGameScreen.cs" />
     <Compile Include="Game\Screen\Screen.cs" />
     <Compile Include="Game\Screen\TitleScreen.cs" />

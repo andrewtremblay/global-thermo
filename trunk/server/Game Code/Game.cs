@@ -30,6 +30,8 @@ namespace GlobalThermo {
 				// so you can draw a grapical version of the game state.
 				RefreshDebugView(); 
 			}, 250);
+
+            world = new World(Players);
 		}
 
 
@@ -42,73 +44,60 @@ namespace GlobalThermo {
             // Chat
         // Server notifications
 
-
-		// This method is called when the last player leaves the room, and it's closed down.
 		public override void GameClosed() {
 			Console.WriteLine("RoomId: " + RoomId);
 		}
 
-		// This method is called whenever a player joins the game
 		public override void UserJoined(Player player) {
-			// this is how you send a player a message
-			player.Send("hello");
-
-			// this is how you broadcast a message to all players connected to the game
+            player.Send("Join");
+            sendLevelInfo(player);
 			Broadcast("UserJoined", player.Id);
 		}
 
-		// This method is called when a player leaves the game
 		public override void UserLeft(Player player) {
 			Broadcast("UserLeft", player.Id);
 		}
 
-		// This method is called when a player sends a message into the server code
 		public override void GotMessage(Player player, Message message) {
 			switch(message.Type) {
-				// This is how you would set a players name when they send in their name in a 
-				// "MyNameIs" message
 				case "MyNameIs":
 					player.Name = message.GetString(0);
 					break;
 			}
 		}
 
-		Point debugPoint;
 
 		// This method get's called whenever you trigger it by calling the RefreshDebugView() method.
 		public override System.Drawing.Image GenerateDebugImage() {
-			// we'll just draw 400 by 400 pixels image with the current time, but you can
-			// use this to visualize just about anything.
 			var image = new Bitmap(400,400);
 			using(var g = Graphics.FromImage(image)) {
-				// fill the background
-				g.FillRectangle(Brushes.Blue, 0, 0, image.Width, image.Height);
+				g.FillRectangle(Brushes.White, 0, 0, image.Width, image.Height);
 
-				// draw the current time
-				g.DrawString(DateTime.Now.ToString(), new Font("Verdana",20F),Brushes.Orange, 10,10);
+                int size = (int)world.WorldLava.Height;
+                g.FillEllipse(Brushes.Red, new Rectangle(200 - size / 2, 200 - size / 2, size, size));
 
-				// draw a dot based on the DebugPoint variable
-				g.FillRectangle(Brushes.Red, debugPoint.X,debugPoint.Y,5,5);
+                Vector2D lastPt = new Vector2D(0,0);
+                foreach (Vector2D pt in world.Landmass)
+                {
+                    g.DrawLine(Pens.Black, (lastPt * 0.5 + new Vector2D(200, 200)).ToPoint(), (pt * 0.5 + new Vector2D(200, 200)).ToPoint());
+                    lastPt = pt;
+                }
 			}
 			return image;
 		}
 
-		// During development, it's very usefull to be able to cause certain events
-		// to occur in your serverside code. If you create a public method with no
-		// arguments and add a [DebugAction] attribute like we've down below, a button
-		// will be added to the development server. 
-		// Whenever you click the button, your code will run.
-		[DebugAction("Play", DebugAction.Icon.Play)]
-		public void PlayNow() {
-			Console.WriteLine("The play button was clicked!");
-		}
+        private void sendLevelInfo(Player player)
+        {
+            Message m = Message.Create("LevelInfo");
+            m.Add((int)world.WorldLava.Height);
+            foreach (Vector2D pt in world.Landmass)
+            {
+                m.Add((int)pt.X);
+                m.Add((int)pt.Y);
+            }
+            player.Send(m);
+        }
 
-		// If you use the [DebugAction] attribute on a method with
-		// two int arguments, the action will be triggered via the
-		// debug view when you click the debug view on a running game.
-		[DebugAction("Set Debug Point", DebugAction.Icon.Green)]
-		public void SetDebugPoint(int x, int y) {
-			debugPoint = new Point(x,y);
-		}
+        private World world;
 	}
 }

@@ -24,6 +24,7 @@ namespace global_thermo
         {
             Content.RootDirectory = "Content";
             GraphicsManager = new GraphicsDeviceManager(this);
+            GraphicsManager.PreferMultiSampling = true;
             screen = null;
         }
 
@@ -69,7 +70,7 @@ namespace global_thermo
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(new Color(247,247,247));
             if (screen != null)
             {
                 screen.Render(Matrix.Identity);

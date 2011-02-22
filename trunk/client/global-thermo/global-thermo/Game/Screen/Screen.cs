@@ -24,7 +24,7 @@ namespace global_thermo.Game.Screen
             width = game.GraphicsManager.PreferredBackBufferWidth;
             height = game.GraphicsManager.PreferredBackBufferHeight;
             UICamera = new Camera(new Vector2(width / 2, height / 2), new Vector2(width, height));
-            GameCamera = new Camera(new Vector2(0, 0), new Vector2(width, height));
+            GameCamera = new Camera(new Vector2(width / 2, height / 2), new Vector2(width, height));
 
             foreach (GameObject child in InterfaceChildren)
             {

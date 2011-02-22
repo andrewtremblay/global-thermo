@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 
 namespace GlobalThermo
 {
@@ -105,6 +106,11 @@ namespace GlobalThermo
         public double MagnitudeSquared()
         {
             return x * x + y * y;
+        }
+
+        public Point ToPoint()
+        {
+            return new Point((int)x, (int)y);
         }
     }
 }
