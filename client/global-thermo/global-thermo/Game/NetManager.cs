@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PlayerIOClient;
+using Microsoft.Xna.Framework;
+using global_thermo.Game.Pods;
 
 namespace global_thermo.Game
 {
@@ -12,6 +14,7 @@ namespace global_thermo.Game
 
         public Client NetClient;
         public Connection NetConnection;
+        public int PlayerID;
 
         private NetManager()
         {
@@ -28,6 +31,12 @@ namespace global_thermo.Game
             NetClient = PlayerIO.Connect("global-thermo-yqmb5es6x0y5gshrcwrzcw", "public", userName, null);
             NetClient.Multiplayer.DevelopmentServer = new PlayerIOClient.ServerEndpoint("127.0.0.1", 8184);
             NetConnection = NetClient.Multiplayer.CreateJoinRoom(roomName, "MyCode", true, null, null);
+        }
+
+        public void SendPlacePodMessage(Vector2 position, PodType podType)
+        {
+            Message m = Message.Create("PlacePod", (int)podType, position.X, position.Y);
+            NetConnection.Send(m);
         }
     }
 }

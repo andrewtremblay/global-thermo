@@ -115,11 +115,12 @@
     <Compile Include="Game\GameObject.cs" />
     <Compile Include="Game\Landmass.cs" />
     <Compile Include="Game\NetManager.cs" />
-    <Compile Include="Game\Pod\Pod.cs" />
-    <Compile Include="Game\Screen\GameScreen.cs" />
-    <Compile Include="Game\Screen\JoinGameScreen.cs" />
-    <Compile Include="Game\Screen\Screen.cs" />
-    <Compile Include="Game\Screen\TitleScreen.cs" />
+    <Compile Include="Game\Pods\Pod.cs" />
+    <Compile Include="Game\Pods\ResourcePod.cs" />
+    <Compile Include="Game\Screens\GameScreen.cs" />
+    <Compile Include="Game\Screens\JoinGameScreen.cs" />
+    <Compile Include="Game\Screens\Screen.cs" />
+    <Compile Include="Game\Screens\TitleScreen.cs" />
     <Compile Include="Game\Sprite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />

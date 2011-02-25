@@ -52,7 +52,7 @@
     <Compile Include="IGameEntity.cs" />
     <Compile Include="Lava.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Pod.cs" />
+    <Compile Include="Pods\Pod.cs" />
     <Compile Include="PodFactory.cs" />
     <Compile Include="Pods\ResidencePod.cs" />
     <Compile Include="Pods\ResourcePod.cs" />

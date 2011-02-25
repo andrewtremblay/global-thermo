@@ -1,5 +1,5 @@
 using System;
-using global_thermo.Game.Screen;
+using global_thermo.Game.Screens;
 
 namespace global_thermo
 {

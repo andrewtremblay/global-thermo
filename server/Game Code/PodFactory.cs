@@ -17,6 +17,8 @@ namespace GlobalThermo
 
         public bool CreatePod(PodType type, Player player, Vector2D location)
         {
+            Console.WriteLine("herp a derp");
+            Console.WriteLine(location);
             Pod pod = null;
 
             // Check if this pod is located properly
@@ -33,8 +35,7 @@ namespace GlobalThermo
                     // Now check if we're between 1 and 3 pod-distances away, and above the connectable pod
                     double distSqr = (ppod.Position - location).MagnitudeSquared();
                     if (distSqr > Pod.Radius * Pod.Radius &&
-                        distSqr <= Pod.Radius * Pod.Radius * 9 &&
-                        location.Y < ppod.Position.Y)
+                        distSqr <= Pod.Radius * Pod.Radius * 9) // && check the polar angle)
                     {
                         validLocation = true;
                         connectingPod = ppod;
@@ -43,8 +44,12 @@ namespace GlobalThermo
                 }
             }
 
-            if (!validLocation) { return false; }
+            // DEBUG
+            pod = new ResourcePod(player, newPodId, location, ResourceType.Ground, 1.0);
+            world.Game.Broadcast("NewPod", player.Id, pod.PodID, (int)type, pod.Position.X, pod.Position.Y);
 
+            if (!validLocation) { return false; }
+            
             switch (type)
             {
                 // If it's a resource pod, we have to figure out which atmo level you've put it in
@@ -78,6 +83,7 @@ namespace GlobalThermo
                 player.Pods.Add(pod);
                 newPodId++;
                 connectingPod.Connectable = false;
+                
                 return true;
             }
 
