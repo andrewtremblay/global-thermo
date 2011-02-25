@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{D3EF37C0-A904-4D9F-91FD-6E855BF8A21A}</ProjectGuid>
@@ -42,39 +42,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="images\interface\titlescreen.png">
-      <Name>titlescreen</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="images\gameplay\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="images\interface\cursor_base.png">
-      <Name>cursor_base</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="images\interface\title_menuhighlight.png">
-      <Name>title_menuhighlight</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="images\interface\title_menu.png">
-      <Name>title_menu</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="images\interface\joinscreen.png">
-      <Name>joinscreen</Name>
+    <Compile Include="**\*.png"
+    	     Exclude=".svn\*">
+      <Name>%(Compile.Filename)</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

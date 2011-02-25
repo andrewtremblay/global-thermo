@@ -62,7 +62,8 @@ namespace global_thermo.Game
 
         public virtual void Update(double deltaTime)
         {
-            foreach (GameObject child in Children)
+            List<GameObject> childrenCopy = new List<GameObject>(Children);
+            foreach (GameObject child in childrenCopy)
             {
                 child.Update(deltaTime);
             }

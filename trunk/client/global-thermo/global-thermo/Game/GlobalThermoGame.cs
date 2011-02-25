@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using global_thermo.Game.Screen;
+using global_thermo.Game.Screens;
 
 namespace global_thermo
 {
@@ -61,7 +61,7 @@ namespace global_thermo
 
         protected override void Update(GameTime gameTime)
         {
-            if (screen != null)
+            if (screen != null && screen.Initialized)
             {
                 screen.Update(gameTime.ElapsedGameTime.TotalSeconds);
             }
@@ -71,7 +71,7 @@ namespace global_thermo
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(new Color(247,247,247));
-            if (screen != null)
+            if (screen != null && screen.Initialized)
             {
                 screen.Render(Matrix.Identity);
             }

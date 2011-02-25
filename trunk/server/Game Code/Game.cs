@@ -31,7 +31,8 @@ namespace GlobalThermo {
 				RefreshDebugView(); 
 			}, 250);
 
-            world = new World(Players);
+            world = new World(this, Players);
+            podFactory = new PodFactory(world);
 		}
 
 
@@ -63,6 +64,9 @@ namespace GlobalThermo {
 				case "MyNameIs":
 					player.Name = message.GetString(0);
 					break;
+                case "PlacePod":
+                    podFactory.CreatePod((Pods.PodType)message.GetInt(0), player, new Vector2D(message.GetDouble(1), message.GetDouble(2)));
+                    break;
 			}
 		}
 
@@ -99,5 +103,6 @@ namespace GlobalThermo {
         }
 
         private World world;
+        private PodFactory podFactory;
 	}
 }

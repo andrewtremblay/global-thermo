@@ -14,6 +14,13 @@ namespace GlobalThermo
         public List<Pod> Pods;
         public List<Resource> Resources;
 
+        public Player()
+            : base()
+        {
+            Pods = new List<Pod>();
+            Resources = new List<Resource>();
+        }
+
         public void Simulate(double timeDelta)
         {
             foreach (Pod pod in Pods)

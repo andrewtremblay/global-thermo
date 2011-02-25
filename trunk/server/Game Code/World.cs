@@ -7,6 +7,7 @@ namespace GlobalThermo
 {
     public class World : IGameEntity
     {
+        public GameCode Game;
         public double GameTime;
         public bool IsGameRunning;
         public List<Player> Players;
@@ -14,8 +15,9 @@ namespace GlobalThermo
         public Lava WorldLava;
         public List<Vector2D> Landmass;
 
-        public World(IEnumerable<Player> players)
+        public World(GameCode game, IEnumerable<Player> players)
         {
+            Game = game;
             GameTime = 0;
             IsGameRunning = true;
             Players = new List<Player>(players);

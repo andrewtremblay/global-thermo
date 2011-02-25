@@ -11,12 +11,14 @@ namespace global_thermo.Game
     {
 
         public bool Visible;
+        public Color SpriteColor;
 
         public Sprite(GlobalThermoGame game)
             : base(game)
         {
             texture = null;
             Visible = true;
+            SpriteColor = Color.White;
         }
 
         public override void Initialize()
@@ -41,7 +43,7 @@ namespace global_thermo.Game
             {
                 game.batch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, transform);
                 {
-                    game.batch.Draw(texture, new Rectangle((int)rectPosition.X - texture.Width / 2, (int)rectPosition.Y - texture.Height / 2, texture.Width, texture.Height), Color.White);
+                    game.batch.Draw(texture, new Rectangle((int)rectPosition.X - texture.Width / 2, (int)rectPosition.Y - texture.Height / 2, texture.Width, texture.Height), SpriteColor);
                 }
                 game.batch.End();
             }

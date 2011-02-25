@@ -29,10 +29,14 @@ namespace global_thermo.Game
             pointList[0] = new VertexPositionColorTexture(new Vector3(rectPosition.X, rectPosition.Y, 0), color, new Vector2(0, 0));
             int i = 1;
 
+            float screenW = game.GraphicsManager.PreferredBackBufferWidth;
+            float screenH = game.GraphicsManager.PreferredBackBufferHeight;
+
             cameraEffect.World = Matrix.Identity;
             Matrix proj = Matrix.CreateOrthographicOffCenter(
-                0,game.GraphicsManager.PreferredBackBufferWidth,game.GraphicsManager.PreferredBackBufferHeight,0,0,-1f) ;
-            proj.Translation = transform.Translation;
+                0,screenW, screenH,0,0,-1f) ;
+            Vector3 translation = new Vector3((transform.Translation.X - screenW / 2) / (screenW / 2), -(transform.Translation.Y - screenH / 2) / (screenH / 2), 0);
+            proj.Translation = translation;
             cameraEffect.View = Matrix.Identity;
             cameraEffect.Projection = proj;
             cameraEffect.VertexColorEnabled = true;
