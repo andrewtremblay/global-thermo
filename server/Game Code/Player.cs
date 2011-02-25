@@ -19,6 +19,11 @@ namespace GlobalThermo
         {
             Pods = new List<Pod>();
             Resources = new List<Resource>();
+            Resources.Add(new Resource(ResourceType.Ground, 2000));
+            Resources.Add(new Resource(ResourceType.Atmo1, 0));
+            Resources.Add(new Resource(ResourceType.Atmo2, 0));
+            Resources.Add(new Resource(ResourceType.Atmo3, 0));
+            Pods.Add(new ResourcePod(this, 0, new Vector2D(0, -290), ResourceType.Ground, 1));
         }
 
         public void Simulate(double timeDelta)

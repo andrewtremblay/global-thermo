@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectGuid>{D3EF37C0-A904-4D9F-91FD-6E855BF8A21A}</ProjectGuid>
@@ -41,16 +41,20 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  
   <ItemGroup>
-    <Compile Include="**\*.png"
-    	     Exclude=".svn\*">
+    <Compile Include="**\*.png" Exclude=".svn\*">
       <Name>%(Compile.Filename)</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
-  
+  <ItemGroup>
+    <Compile Include="fonts\Courier New.spritefont">
+      <Name>Courier New</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
   <!--  To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -52,9 +52,25 @@ namespace global_thermo.Game
             state = Mouse.GetState();
 
             // DEBUG, REMOVE LOL!?!!?!?
-            if (state.RightButton == ButtonState.Pressed)
+            if (Keyboard.GetState().IsKeyDown(Keys.Q))
             {
                 cursorMode = CursorMode.Place;
+                placePodType = PodType.Resource;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            {
+                cursorMode = CursorMode.Place;
+                placePodType = PodType.Residence;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.E))
+            {
+                cursorMode = CursorMode.Place;
+                placePodType = PodType.Defense;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.R))
+            {
+                cursorMode = CursorMode.Place;
+                placePodType = PodType.Branch;
             }
             // END REMOVE LOL!?!?!?!
 
@@ -72,15 +88,17 @@ namespace global_thermo.Game
 
         private void updateSelect(double deltaTime)
         {
+            // TEMP
             SpriteColor = Color.White;
         }
 
         private void updatePlace(double deltaTime)
         {
+            // TEMP
             SpriteColor = Color.Green;
             if (JustClicked())
             {
-                NetManager.GetInstance().SendPlacePodMessage(screen.UIToGame(rectPosition), PodType.Resource);
+                NetManager.GetInstance().SendPlacePodMessage(screen.UIToGame(rectPosition), placePodType);
                 cursorMode = CursorMode.Select;
             }
         }
@@ -89,6 +107,7 @@ namespace global_thermo.Game
         private MouseState lastState;
         private MouseState state;
         private Screen screen;
+        private PodType placePodType;
 
     }
 }

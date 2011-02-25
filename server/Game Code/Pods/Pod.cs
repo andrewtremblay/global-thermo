@@ -15,7 +15,7 @@ namespace GlobalThermo.Pods
 
     public abstract class Pod : IGameEntity
     {
-        public const double Radius = 10;
+        public const double Radius = 15;
 
         public int PodID;
         public Vector2D Position;

@@ -12,6 +12,7 @@ using global_thermo.Game.Screens;
 
 namespace global_thermo
 {
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
