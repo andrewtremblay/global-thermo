@@ -15,13 +15,16 @@ namespace GlobalThermo
         public Lava WorldLava;
         public List<Vector2D> Landmass;
 
-        public World(GameCode game, IEnumerable<Player> players)
+        public World(GameCode game)
         {
             Game = game;
             GameTime = 0;
             IsGameRunning = true;
-            Players = new List<Player>(players);
+            Players = new List<Player>();
             Atmospheres = new List<Atmosphere>();
+            Atmospheres.Add(new Atmosphere(300, 400, ResourceType.Atmo1));
+            Atmospheres.Add(new Atmosphere(400, 500, ResourceType.Atmo2));
+            Atmospheres.Add(new Atmosphere(500, 600, ResourceType.Atmo3));
             WorldLava = new Lava(300);
             Landmass = new List<Vector2D>();
             generateLandmass();

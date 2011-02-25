@@ -26,7 +26,6 @@ namespace GlobalThermo.Pods
             if (Rate > 0)
             {
                 resourceTimer += timeDelta * Rate;
-
                 // If you've gained one resource, the player has earned the collectAmt of that resource
                 if (resourceTimer > 1.0)
                 {
