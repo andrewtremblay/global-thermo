@@ -23,8 +23,15 @@ namespace global_thermo.Game
         {
             // Make an identity matrix, translate it, zoom it
             Matrix mtx = Matrix.Identity;
-            mtx.Translation = new Vector3(-Center.X + windowSize.X / 2, -Center.Y + windowSize.Y / 2, 0);
-            mtx = Matrix.Multiply(mtx, (float)Zoom);
+            //mtx = Matrix.Multiply(mtx, (float)Zoom);
+            //Matrix mtx = Matrix.CreateScale((float)Zoom, (float)Zoom, 1);
+
+            mtx.Translation = new Vector3(-Center.X + windowSize.X / 2 / (float)Zoom, -Center.Y + windowSize.Y / 2 / (float)Zoom, 0);
+            mtx.M44 = 1.0f / (float)Zoom;
+            //mtx.M12 = (float)Zoom;
+
+            //Console.WriteLine(mtx);
+            
             return mtx;
         }
 

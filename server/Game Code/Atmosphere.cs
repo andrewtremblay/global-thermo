@@ -7,21 +7,21 @@ namespace GlobalThermo
 {
     public class Atmosphere : IGameEntity
     {
-        public double innerRadius;
-        public double outerRadius;
-        public ResourceType resourceType;
+        public double InnerRadius;
+        public double OuterRadius;
+        public ResourceType ResourceType;
 
         public Atmosphere(double innerRadius, double outerRadius, ResourceType resourceType)
         {
-            this.innerRadius = innerRadius;
-            this.outerRadius = outerRadius;
-            this.resourceType = resourceType;
+            this.InnerRadius = innerRadius;
+            this.OuterRadius = outerRadius;
+            this.ResourceType = resourceType;
         }
 
         public bool IsWithin(Vector2D pt)
         {
-            return pt.MagnitudeSquared() >= innerRadius * innerRadius
-                && pt.MagnitudeSquared() <  outerRadius * outerRadius;
+            return pt.MagnitudeSquared() >= InnerRadius * InnerRadius
+                && pt.MagnitudeSquared() < OuterRadius * OuterRadius;
         }
 
         public void Simulate(double timeDelta)

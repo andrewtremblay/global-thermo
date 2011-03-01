@@ -19,12 +19,13 @@ namespace GlobalThermo {
 			// This is how you setup a timer
 			AddTimer(delegate {
                 sendPlayerResources();
+                sendPlanetInfo();
 			}, 1000);
 
             AddTimer(delegate
             {
-                world.Simulate(1.0);
-            }, 1000);
+                world.Simulate(0.25);
+            }, 250);
 			
 			// Debug Example:
 			// Sometimes, it can be very usefull to have a graphical representation
@@ -35,7 +36,7 @@ namespace GlobalThermo {
 				// This will cause the GenerateDebugImage() method to be called
 				// so you can draw a grapical version of the game state.
 				RefreshDebugView(); 
-			}, 1000);
+			}, 250);
 
             world = new World(this);
             podFactory = new PodFactory(world);
@@ -49,6 +50,7 @@ namespace GlobalThermo {
             player.Send("Join");
             sendLevelInfo(player);
             world.Players.Add(player);
+            player.world = world;
 			Broadcast("UserJoined", player.Id);
 		}
 
@@ -70,24 +72,32 @@ namespace GlobalThermo {
 
 		// This method get's called whenever you trigger it by calling the RefreshDebugView() method.
 		public override System.Drawing.Image GenerateDebugImage() {
+            double scale = 0.2;
 			var image = new Bitmap(1000,1000);
 			using(var g = Graphics.FromImage(image)) {
 				g.FillRectangle(Brushes.White, 0, 0, image.Width, image.Height);
 
-                int size = (int)world.Atmospheres[2].outerRadius;
-                g.FillEllipse(Brushes.DarkGray, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
-                size = (int)world.Atmospheres[1].outerRadius;
-                g.FillEllipse(Brushes.Gray, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
-                size = (int)world.Atmospheres[0].outerRadius;
-                g.FillEllipse(Brushes.LightGray, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
+                int size = (int)world.Atmospheres[2].OuterRadius;
+                g.FillEllipse(Brushes.DarkGray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
+                size = (int)world.Atmospheres[1].OuterRadius;
+                g.FillEllipse(Brushes.Gray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
+                size = (int)world.Atmospheres[0].OuterRadius;
+                g.FillEllipse(Brushes.LightGray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
 
-                size = (int)world.WorldLava.Height;
-                g.FillEllipse(Brushes.Red, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
+                size = (int)world.WaterHeight;
+                g.FillEllipse(Brushes.Blue, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
+                size = (int)world.TrenchHeight;
+                g.FillEllipse(Brushes.LightGray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
+                size = (int)world.LavaHeight;
+                g.FillEllipse(Brushes.Red, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
+
+                size = (int)world.BoilThreshold;
+                g.DrawEllipse(new Pen(Brushes.Black), new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
 
                 Vector2D lastPt = new Vector2D(0,0);
                 foreach (Vector2D pt in world.Landmass)
                 {
-                    g.DrawLine(Pens.Black, (lastPt + new Vector2D(500, 500)).ToPoint(), (pt + new Vector2D(500, 500)).ToPoint());
+                    g.DrawLine(Pens.Black, (lastPt * scale + new Vector2D(500, 500)).ToPoint(), (pt * scale + new Vector2D(500, 500)).ToPoint());
                     lastPt = pt;
                 }
                 foreach (Player p in Players)
@@ -96,11 +106,11 @@ namespace GlobalThermo {
                     {
                         if (pod.Connectable)
                         {
-                            g.DrawEllipse(Pens.Blue, new Rectangle((int)pod.Position.X - (int)Pod.Radius + 500, (int)pod.Position.Y - 15 + 500, (int)Pod.Radius * 2, (int)Pod.Radius * 2));
+                            g.DrawEllipse(Pens.Blue, new Rectangle((int)(pod.Position.X * scale - Pod.Radius * scale + 500), (int)(pod.Position.Y * scale - Pod.Radius * scale + 500), (int)(Pod.Radius * 2 * scale), (int)(Pod.Radius * 2 * scale)));
                         }
                         else
                         {
-                            g.DrawEllipse(Pens.Black, new Rectangle((int)pod.Position.X - (int)Pod.Radius + 500, (int)pod.Position.Y - 15 + 500, (int)Pod.Radius * 2, (int)Pod.Radius*2));
+                            g.DrawEllipse(Pens.Black, new Rectangle((int)(pod.Position.X * scale - Pod.Radius * scale + 500), (int)(pod.Position.Y * scale - Pod.Radius * scale + 500), (int)(Pod.Radius * 2 * scale), (int)(Pod.Radius * 2 * scale)));
                         }
                     }
                 }
@@ -111,7 +121,6 @@ namespace GlobalThermo {
         private void sendLevelInfo(Player player)
         {
             Message m = Message.Create("LevelInfo");
-            m.Add((int)world.WorldLava.Height);
             foreach (Vector2D pt in world.Landmass)
             {
                 m.Add((int)pt.X);
@@ -132,6 +141,16 @@ namespace GlobalThermo {
                 }
                 p.Send(m);
             }
+        }
+
+        private void sendPlanetInfo()
+        {
+            Message m = Message.Create("PlanetInfo");
+            m.Add(world.LavaHeight);
+            m.Add(world.LavaHeightDelta);
+            m.Add(world.WaterHeight);
+            m.Add(world.WaterHeightDelta);
+            Broadcast(m);
         }
 
         private World world;

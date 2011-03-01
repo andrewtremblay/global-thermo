@@ -18,12 +18,13 @@ namespace global_thermo.Game
 
     public class Cursor : Sprite
     {
-        
+        public double ZoomLevel;
         public Cursor(GlobalThermoGame game, Screen screen)
             : base(game)
         {
             cursorMode = CursorMode.Select;
             this.screen = screen;
+            ZoomLevel = 1.0;
         }
 
         public override void Initialize()
@@ -36,6 +37,11 @@ namespace global_thermo.Game
         {
             // Update position based on mouse
             SetTopLeft(new Vector2(Mouse.GetState().X + 4, Mouse.GetState().Y + 4));
+
+            int scrollDelta = state.ScrollWheelValue - lastScroll;
+            lastScroll = state.ScrollWheelValue;
+
+            ZoomLevel = Math.Min(Math.Max(ZoomLevel - scrollDelta / 2400.0, 0.125), 1);
 
             // Cursor modes
             switch (cursorMode)
@@ -103,6 +109,7 @@ namespace global_thermo.Game
             }
         }
 
+        private int lastScroll;
         private CursorMode cursorMode;
         private MouseState lastState;
         private MouseState state;
