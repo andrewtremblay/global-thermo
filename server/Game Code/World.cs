@@ -8,7 +8,11 @@ namespace GlobalThermo
 {
     public class World : IGameEntity
     {
+        const double MAXGAMESPEED = 100.0;
+        const double MINGAMESPEED = 1.0;
+
         public GameCode Game;
+        public double GameSpeed;
         public double GameTime;
         public double GameSpeed;
         public bool IsGameRunning;
@@ -47,6 +51,12 @@ namespace GlobalThermo
 
         public void Simulate(double timeDelta)
         {
+<<<<<<< .mine
+
+            List<Pod> allPods = new List<Pod>();
+            List<ResourcePod> rPods = new List<ResourcePod>();
+
+=======
             timeDelta *= GameSpeed;
 
             Dictionary<ResourceType, int> collectors = new Dictionary<ResourceType, int>();
@@ -55,9 +65,13 @@ namespace GlobalThermo
             collectors[ResourceType.Atmo3] = 0;
             collectors[ResourceType.Ground] = 0;
             // Update the players and count the resource collectors
+>>>>>>> .r35
             foreach (Player player in Players)
             {
                 player.Simulate(timeDelta);
+<<<<<<< .mine
+                allPods.AddRange(player.Pods);
+=======
                 foreach (Pod p in player.Pods)
                 {
                     if (p is ResourcePod)
@@ -65,11 +79,27 @@ namespace GlobalThermo
                         collectors[(p as ResourcePod).RType]++;
                     }
                 }
+>>>>>>> .r35
             }
+            foreach (Pod p in allPods) { if (p is ResourcePod) { rPods.Add((p as ResourcePod)); } }
             foreach (Atmosphere atmo in Atmospheres)
             {
+                atmo.NumCollecting = 0;
+                foreach (ResourcePod p in rPods)
+                {
+                    if (p.ResourceType == atmo.ResourceType)
+                    {
+                        atmo.NumCollecting++;
+                    }
+                }
                 atmo.Simulate(timeDelta);
             }
+<<<<<<< .mine
+            WorldLava.RisingRate = rPods.Count;
+            WorldLava.Simulate(timeDelta);
+
+            GameTime += timeDelta * GameSpeed;
+=======
 
             
             // Figure out how much the lava should move
@@ -104,10 +134,27 @@ namespace GlobalThermo
             WaterHeight = Math.Min(WaterHeight, waterMax - (waterMax - TrenchHeight) * Unreplenishable);
 
             GameTime += timeDelta;
+>>>>>>> .r35
         }
 
+<<<<<<< .mine
+        public void CalcGameSpeed()
+        {
+            GameSpeed = MAXGAMESPEED;
+            foreach (Player player in Players)
+            {
+                if (player.GetVoteSpeed() < GameSpeed)
+                {
+                    GameSpeed = Math.Max(player.GetVoteSpeed(), MINGAMESPEED);
+                }
+            }
+            Game.Broadcast("GameSpeed", GameSpeed);
+        }
+
+=======
 
 
+>>>>>>> .r35
         private void generateLandmass()
         {
             double angle = 0;

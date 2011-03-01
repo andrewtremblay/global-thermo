@@ -37,12 +37,22 @@ namespace GlobalThermo
                 // Find all the connectable pods
                 foreach (Pod ppod in player.Pods)
                 {
+                    double distSqr = (ppod.Position - location).MagnitudeSquared();
+                    if (distSqr <= Pod.Radius * Pod.Radius * 4)
+                    {
+                        validLocation = false;
+                        break;
+                    }
                     if (ppod.Connectable)
                     {
                         // Now check if we're between 1 and 3 pod-distances away, and above the connectable pod
-                        double distSqr = (ppod.Position - location).MagnitudeSquared();
-                        if (distSqr > Pod.Radius * Pod.Radius &&
-                            distSqr <= Pod.Radius * Pod.Radius * 9) // && check the polar angle)
+                        Vector2D oldPolar = ppod.Position.ToPolar();
+                        Vector2D newPolar = location.ToPolar();
+                        Console.WriteLine("new polar:");
+                        Console.WriteLine(newPolar);
+                        if (distSqr > Pod.Radius * Pod.Radius * 4 &&
+                            distSqr <= Pod.Radius * Pod.Radius * 16 &&
+                            newPolar.Y > oldPolar.Y)
                         {
                             validLocation = true;
                             connectingPod = ppod;
