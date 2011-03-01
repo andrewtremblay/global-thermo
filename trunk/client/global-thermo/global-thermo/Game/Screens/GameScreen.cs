@@ -102,6 +102,9 @@ namespace global_thermo.Game.Screens
                 case "PlanetInfo":
                     net_PlanetInfo(e);
                     break;
+                case "Chat":
+                    net_Chat(e);
+                    break;
             }
         }
 
@@ -144,6 +147,11 @@ namespace global_thermo.Game.Screens
         {
             planet.LavaRadius = e.GetDouble(0);
             planet.WaterRadius = e.GetDouble(2);
+        }
+
+        private void net_Chat(Message e)
+        {
+
         }
 
         private Planet planet;
