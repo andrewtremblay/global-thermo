@@ -66,6 +66,9 @@ namespace GlobalThermo {
                 case "PlacePod":
                     podFactory.CreatePod((Pods.PodType)message.GetInt(0), player, new Vector2D(message.GetDouble(1), message.GetDouble(2)));
                     break;
+                case "Chat":
+                    Broadcast("Chat", message.GetString(0));
+                    break;
 			}
 		}
 
