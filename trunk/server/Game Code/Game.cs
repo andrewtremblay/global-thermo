@@ -66,16 +66,13 @@ namespace GlobalThermo {
                 case "PlacePod":
                     podFactory.CreatePod((Pods.PodType)message.GetInt(0), player, new Vector2D(message.GetDouble(1), message.GetDouble(2)));
                     break;
-<<<<<<< .mine
                 case "VoteSpeed":
                     player.SetVoteSpeed(message.GetDouble(0));
                     world.CalcGameSpeed();
                     break;
-=======
                 case "Chat":
                     Broadcast("Chat", message.GetString(0));
                     break;
->>>>>>> .r35
 			}
 		}
 
@@ -87,21 +84,13 @@ namespace GlobalThermo {
 			using(var g = Graphics.FromImage(image)) {
 				g.FillRectangle(Brushes.White, 0, 0, image.Width, image.Height);
 
-<<<<<<< .mine
-                int size = (int)world.Atmospheres[2].OuterRadius;
-                g.FillEllipse(Brushes.DarkGray, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
-                size = (int)world.Atmospheres[1].OuterRadius;
-                g.FillEllipse(Brushes.Gray, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
-                size = (int)world.Atmospheres[0].OuterRadius;
-                g.FillEllipse(Brushes.LightGray, new Rectangle(500 - size, 500 - size, size * 2, size * 2));
-=======
+
                 int size = (int)world.Atmospheres[2].OuterRadius;
                 g.FillEllipse(Brushes.DarkGray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
                 size = (int)world.Atmospheres[1].OuterRadius;
                 g.FillEllipse(Brushes.Gray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
                 size = (int)world.Atmospheres[0].OuterRadius;
                 g.FillEllipse(Brushes.LightGray, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));
->>>>>>> .r35
 
                 size = (int)world.WaterHeight;
                 g.FillEllipse(Brushes.Blue, new Rectangle((int)(500 - size * scale), (int)(500 - size * scale), (int)(size * 2 * scale), (int)(size * 2 * scale)));

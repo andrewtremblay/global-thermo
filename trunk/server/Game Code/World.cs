@@ -14,7 +14,6 @@ namespace GlobalThermo
         public GameCode Game;
         public double GameSpeed;
         public double GameTime;
-        public double GameSpeed;
         public bool IsGameRunning;
         public List<Player> Players;
         public List<Atmosphere> Atmospheres;
@@ -51,12 +50,6 @@ namespace GlobalThermo
 
         public void Simulate(double timeDelta)
         {
-<<<<<<< .mine
-
-            List<Pod> allPods = new List<Pod>();
-            List<ResourcePod> rPods = new List<ResourcePod>();
-
-=======
             timeDelta *= GameSpeed;
 
             Dictionary<ResourceType, int> collectors = new Dictionary<ResourceType, int>();
@@ -65,13 +58,9 @@ namespace GlobalThermo
             collectors[ResourceType.Atmo3] = 0;
             collectors[ResourceType.Ground] = 0;
             // Update the players and count the resource collectors
->>>>>>> .r35
             foreach (Player player in Players)
             {
                 player.Simulate(timeDelta);
-<<<<<<< .mine
-                allPods.AddRange(player.Pods);
-=======
                 foreach (Pod p in player.Pods)
                 {
                     if (p is ResourcePod)
@@ -79,37 +68,27 @@ namespace GlobalThermo
                         collectors[(p as ResourcePod).RType]++;
                     }
                 }
->>>>>>> .r35
             }
-            foreach (Pod p in allPods) { if (p is ResourcePod) { rPods.Add((p as ResourcePod)); } }
             foreach (Atmosphere atmo in Atmospheres)
             {
-                atmo.NumCollecting = 0;
-                foreach (ResourcePod p in rPods)
-                {
-                    if (p.ResourceType == atmo.ResourceType)
-                    {
-                        atmo.NumCollecting++;
-                    }
-                }
                 atmo.Simulate(timeDelta);
             }
-<<<<<<< .mine
-            WorldLava.RisingRate = rPods.Count;
-            WorldLava.Simulate(timeDelta);
 
-            GameTime += timeDelta * GameSpeed;
-=======
+            // When the lava reaches the (arbitrary) boiling threshold, the water starts evaporating
+            // Between boiling threshold and the bottom of the water (trench), the water will evaporate 50%,
+            // with no permanent damage. After the lava reaches the trench, it starts doing permanent damage,
+            // preventing the water from returning fully. If the lava overtakes the water completely, the water is 100%
+            // gone permanently. 
 
-            
             // Figure out how much the lava should move
             double lavaRate = 0.1;
-            double diminish = ((waterMax - LavaHeight) / waterMax) * 1.5 + 0.1;
-            //LavaHeightDelta = (-10.0 + collectors[ResourceType.Atmo1] + collectors[ResourceType.Atmo2] * 2 + collectors[ResourceType.Atmo3] * 3) * lavaRate * timeDelta;
-            LavaHeightDelta = 100 * timeDelta;
+            double diminish = ((waterMax - LavaHeight) / waterMax) * 1.5 + 0.1; // This makes it grow slower as the lava level rises
+            LavaHeightDelta = (-10.0 + collectors[ResourceType.Atmo1] + collectors[ResourceType.Atmo2] * 2 + collectors[ResourceType.Atmo3] * 3) * lavaRate * timeDelta;
+
+            //LavaHeightDelta = 100 * timeDelta; // As a test of the water/lava interactions
+
             LavaHeight = Math.Max(minLavaHeight, LavaHeight + LavaHeightDelta * diminish);
 
-            //             >=
             if (LavaHeight >= BoilThreshold)
             {
                 if (LavaHeight < TrenchHeight)
@@ -128,16 +107,13 @@ namespace GlobalThermo
                 {
                     WaterHeight += timeDelta * waterRegenRate;
                 }
-                //WaterHeight = waterMax;
             }
             if (LavaHeight >= 1620) { LavaHeight = 0; }
             WaterHeight = Math.Min(WaterHeight, waterMax - (waterMax - TrenchHeight) * Unreplenishable);
 
             GameTime += timeDelta;
->>>>>>> .r35
         }
 
-<<<<<<< .mine
         public void CalcGameSpeed()
         {
             GameSpeed = MAXGAMESPEED;
@@ -151,10 +127,6 @@ namespace GlobalThermo
             Game.Broadcast("GameSpeed", GameSpeed);
         }
 
-=======
-
-
->>>>>>> .r35
         private void generateLandmass()
         {
             double angle = 0;
