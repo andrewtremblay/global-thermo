@@ -15,12 +15,12 @@ namespace global_thermo.Game
 
     public class Resource
     {
-        public ResourceType RType;
         public double Quantity;
+        public ResourceType RType;
 
-        public Resource(ResourceType rType)
+        public Resource(ResourceType type)
         {
-            RType = rType;
+            RType = type;
             Quantity = 0;
         }
     }

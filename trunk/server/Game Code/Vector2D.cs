@@ -99,10 +99,24 @@ namespace GlobalThermo
             return new Vector2D(-u.x, -u.y);
         }
 
+        public Vector2D ToPolar()
+        {
+            double angle = Math.Atan2(Y, X);
+            return new Vector2D(angle, Magnitude());
+        }
+
+        public Vector2D ToRect()
+        {
+            double x = Math.Sin(X) * Y;
+            double y = -Math.Cos(X) * Y;
+            return new Vector2D(x, y);
+        }
+
         public double Magnitude()
         {
             return Math.Sqrt(x * x + y * y);
         }
+
         public double MagnitudeSquared()
         {
             return x * x + y * y;

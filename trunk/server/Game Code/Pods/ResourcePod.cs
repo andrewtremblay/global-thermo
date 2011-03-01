@@ -8,14 +8,24 @@ namespace GlobalThermo.Pods
     class ResourcePod : Pod
     {
         public double Rate;
+<<<<<<< .mine
+        public double LavaRate;
+        public ResourceType ResourceType;
+=======
         public ResourceType RType;
+>>>>>>> .r35
 
         public ResourcePod(Player owner, int podId, Vector2D position, ResourceType resourceType, double resourceCollectAmt)
             : base(owner, podId, position)
         {
             Rate = 1.0;
+            LavaRate = Rate;
 
+<<<<<<< .mine
+            this.ResourceType = resourceType;
+=======
             this.RType = resourceType;
+>>>>>>> .r35
             this.resourceCollectAmt = resourceCollectAmt;
             this.resourceTimer = 0;
             Type = PodType.Resource;
@@ -31,10 +41,12 @@ namespace GlobalThermo.Pods
                 if (resourceTimer > 1.0)
                 {
                     resourceTimer -= 1.0;
+<<<<<<< .mine
+                    this.owner.getResourceByType(ResourceType).Quantity += resourceCollectAmt;
+=======
                     this.owner.getResourceByType(RType).Quantity += resourceCollectAmt;
+>>>>>>> .r35
                 }
-
-                // We need to also do something about the lava, and about depleting the atmo levels
             }
             else
             {
