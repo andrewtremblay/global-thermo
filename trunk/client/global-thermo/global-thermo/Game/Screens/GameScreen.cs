@@ -43,33 +43,34 @@ namespace global_thermo.Game.Screens
             cursor = new Cursor(game, this);
             InterfaceChildren.Add(cursor);
 
-            Sprite derp = new Sprite(game);
-            derp.LoadTexture(game.Content.Load<Texture2D>("images/interface/cursor_base"));
-            Children.Add(derp);
-
             debugFont = game.Content.Load<SpriteFont>("fonts/Courier New");
 
             base.Initialize();
+
+            GameCamera.Center = new Vector2(0, -1800);
         }
 
         public override void Update(double deltaTime)
         {
             if (cursor.RectPosition.X > game.GraphicsManager.PreferredBackBufferWidth - 20)
             {
-                GameCamera.Center.X += (float)deltaTime * scrollSpeed;
+                GameCamera.Center.X += (float)(deltaTime * scrollSpeed / GameCamera.Zoom);
             }
             if (cursor.RectPosition.X < 20)
             {
-                GameCamera.Center.X -= (float)deltaTime * scrollSpeed;
+                GameCamera.Center.X -= (float)(deltaTime * scrollSpeed / GameCamera.Zoom);
             }
             if (cursor.RectPosition.Y > game.GraphicsManager.PreferredBackBufferHeight - 20)
             {
-                GameCamera.Center.Y += (float)deltaTime * scrollSpeed;
+                GameCamera.Center.Y += (float)(deltaTime * scrollSpeed / GameCamera.Zoom);
             }
             if (cursor.RectPosition.Y < 20)
             {
-                GameCamera.Center.Y -= (float)deltaTime * scrollSpeed;
+                GameCamera.Center.Y -= (float)(deltaTime * scrollSpeed / GameCamera.Zoom);
             }
+
+            GameCamera.Zoom = cursor.ZoomLevel;
+            Console.WriteLine(GameCamera.Zoom);
             base.Update(deltaTime);
         }
 
@@ -98,6 +99,9 @@ namespace global_thermo.Game.Screens
                 case "ResourceInfo":
                     net_ResourceInfo(e);
                     break;
+                case "PlanetInfo":
+                    net_PlanetInfo(e);
+                    break;
             }
         }
 
@@ -109,14 +113,13 @@ namespace global_thermo.Game.Screens
         private void net_LevelInfo(Message e)
         {
             // The height, then x, y, of each point
-            int height = e.GetInt(0);
             List<Vector2> points = new List<Vector2>();
-            for (uint i = 1; i < e.Count; i += 2)
+            for (uint i = 0; i < e.Count; i += 2)
             {
                 points.Add(new Vector2((float)e.GetInt(i),(float)e.GetInt(i + 1)));
             }
-            land = new Landmass(game, height, points);
-            Children.Add(land);
+            planet = new Planet(game, new Vector2(0, 0), points);
+            Children.Add(planet);
         }
 
         private void net_NewPod(Message e)
@@ -137,10 +140,17 @@ namespace global_thermo.Game.Screens
             }
         }
 
-        private Landmass land;
+        private void net_PlanetInfo(Message e)
+        {
+            planet.LavaRadius = e.GetDouble(0);
+            planet.WaterRadius = e.GetDouble(2);
+        }
+
+        private Planet planet;
         private Cursor cursor;
         private SpriteFont debugFont;
 
         private float scrollSpeed = 400.0f;
     }
 }
+
