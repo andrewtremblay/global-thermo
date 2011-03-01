@@ -25,14 +25,9 @@ namespace GlobalThermo
             Resources.Add(new Resource(ResourceType.Atmo1, 0));
             Resources.Add(new Resource(ResourceType.Atmo2, 0));
             Resources.Add(new Resource(ResourceType.Atmo3, 0));
-<<<<<<< .mine
-            //Pods.Add(new ResourcePod(this, 0, new Vector2D(0, -290), ResourceType.Ground, 1));
-
             votedSpeed = 1.0;
-=======
             //Pods.Add(new ResourcePod(this, 0, new Vector2D(0, -290), ResourceType.Ground, 1));
             world = null;
->>>>>>> .r35
         }
 
         public void SetVoteSpeed(double newSpeed)
