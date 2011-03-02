@@ -50,6 +50,7 @@ namespace global_thermo.Game
         {
             this.game = game;
             Children = new List<GameObject>();
+            size = new Vector2(0, 0);
         }
 
         public virtual void Initialize()
@@ -80,5 +81,6 @@ namespace global_thermo.Game
         protected GlobalThermoGame game;
         protected Vector2 rectPosition;
         protected Vector2 polarPosition;
+        protected Vector2 size;
     }
 }
