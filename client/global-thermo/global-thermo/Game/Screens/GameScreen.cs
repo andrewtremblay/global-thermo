@@ -6,6 +6,7 @@ using PlayerIOClient;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using global_thermo.Game.Pods;
+using global_thermo.Game.Interface;
 
 namespace global_thermo.Game.Screens
 {
@@ -39,6 +40,26 @@ namespace global_thermo.Game.Screens
         {
             NetManager.GetInstance().NetConnection.OnMessage += new MessageReceivedEventHandler(net_HandleMessages);
             NetManager.GetInstance().NetConnection.OnDisconnect += new DisconnectEventHandler(net_HandleDisconnect);
+
+            Sprite interfaceBar = new Sprite(game);
+            interfaceBar.LoadTexture(game.Content.Load<Texture2D>("images/interface/topbar"));
+            interfaceBar.SetTopLeft(new Vector2(0, 0));
+            InterfaceChildren.Add(interfaceBar);
+
+            Button constructButton = new Button(game, buttonConstruct);
+            constructButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_construct"), 77);
+            constructButton.SetTopLeft(new Vector2(67, 12));
+            InterfaceChildren.Add(constructButton);
+
+            Button infoButton = new Button(game, buttonInfo);
+            infoButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_info"), 77);
+            infoButton.SetTopLeft(new Vector2(177, 12));
+            InterfaceChildren.Add(infoButton);
+
+            Button timeButton = new Button(game, buttonTime);
+            timeButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_time"), 77);
+            timeButton.SetTopLeft(new Vector2(287, 12));
+            InterfaceChildren.Add(timeButton);
 
             cursor = new Cursor(game, this);
             InterfaceChildren.Add(cursor);
@@ -78,10 +99,12 @@ namespace global_thermo.Game.Screens
         {
             base.RenderInterface(transform);
             game.batch.Begin();
+            /*
             game.batch.DrawString(debugFont, "G:"+GetResourceByType(ResourceType.Ground).Quantity.ToString("N0"), new Vector2(100, 5), Color.Black);
             game.batch.DrawString(debugFont, "1:" + GetResourceByType(ResourceType.Atmo1).Quantity.ToString("N0"), new Vector2(265, 5), Color.Black);
             game.batch.DrawString(debugFont, "2:" + GetResourceByType(ResourceType.Atmo2).Quantity.ToString("N0"), new Vector2(430, 5), Color.Black);
             game.batch.DrawString(debugFont, "3:" + GetResourceByType(ResourceType.Atmo3).Quantity.ToString("N0"), new Vector2(595, 5), Color.Black);
+             */
             game.batch.End();
         }
 
@@ -150,6 +173,19 @@ namespace global_thermo.Game.Screens
         }
 
         private void net_Chat(Message e)
+        {
+
+        }
+
+        private void buttonConstruct()
+        {
+
+        }
+        private void buttonInfo()
+        {
+
+        }
+        private void buttonTime()
         {
 
         }

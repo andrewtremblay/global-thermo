@@ -12,6 +12,7 @@ namespace global_thermo.Game
 
         public bool Visible;
         public Color SpriteColor;
+        public int Frame;
 
         public Sprite(GlobalThermoGame game)
             : base(game)
@@ -29,6 +30,17 @@ namespace global_thermo.Game
         public void LoadTexture(Texture2D texture)
         {
             this.texture = texture;
+            size = new Vector2(texture.Width, texture.Height);
+            this.frameWidth = 0;
+            Frame = 0;
+        }
+
+        public void LoadTexture(Texture2D texture, int frameWidth)
+        {
+            LoadTexture(texture);
+            this.frameWidth = frameWidth;
+            size = new Vector2(frameWidth, texture.Height);
+            Frame = 0;
         }
 
         public void SetTopLeft(Vector2 topLeft)
@@ -43,12 +55,15 @@ namespace global_thermo.Game
             {
                 game.batch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, transform);
                 {
-                    game.batch.Draw(texture, new Rectangle((int)rectPosition.X - texture.Width / 2, (int)rectPosition.Y - texture.Height / 2, texture.Width, texture.Height), SpriteColor);
+                    Vector2 halfSize = size / 2;
+                    game.batch.Draw(texture, new Rectangle((int)rectPosition.X - (int)halfSize.X, (int)rectPosition.Y - (int)halfSize.Y, (int)size.X, (int)size.Y),
+                                    new Rectangle(Frame * (int)size.X, 0, (int)size.X, (int)size.Y), SpriteColor);
                 }
                 game.batch.End();
             }
         }
 
         protected Texture2D texture;
+        protected int frameWidth;
     }
 }

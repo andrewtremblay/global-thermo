@@ -113,6 +113,7 @@
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Game\Cursor.cs" />
     <Compile Include="Game\GameObject.cs" />
+    <Compile Include="Game\Interface\Button.cs" />
     <Compile Include="Game\Planet.cs" />
     <Compile Include="Game\NetManager.cs" />
     <Compile Include="Game\Pods\Pod.cs" />
