@@ -41,6 +41,8 @@ namespace global_thermo.Game.Screens
             NetManager.GetInstance().NetConnection.OnMessage += new MessageReceivedEventHandler(net_HandleMessages);
             NetManager.GetInstance().NetConnection.OnDisconnect += new DisconnectEventHandler(net_HandleDisconnect);
 
+            // Main interface bar
+            
             Sprite interfaceBar = new Sprite(game);
             interfaceBar.LoadTexture(game.Content.Load<Texture2D>("images/interface/topbar"));
             interfaceBar.SetTopLeft(new Vector2(0, 0));
@@ -60,6 +62,32 @@ namespace global_thermo.Game.Screens
             timeButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_time"), 77);
             timeButton.SetTopLeft(new Vector2(287, 12));
             InterfaceChildren.Add(timeButton);
+
+            // Construction submenu
+            constructionMenu = new GameObjectGroup(game);
+            InterfaceChildren.Add(constructionMenu);
+
+            Button resourcePodButton = new Button(game, delegate()  { cursor.PlacePodMode(PodType.ResourceAny); constructionMenu.Disable(); });
+            resourcePodButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_p_resource"), 40);
+            resourcePodButton.SetTopLeft(new Vector2(55, 99));
+            constructionMenu.Children.Add(resourcePodButton);
+
+            Button residencePodButton = new Button(game, delegate() { cursor.PlacePodMode(PodType.Residence); constructionMenu.Disable(); });
+            residencePodButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_p_residence"), 40);
+            residencePodButton.SetTopLeft(new Vector2(100, 99));
+            constructionMenu.Children.Add(residencePodButton);
+
+            Button defensePodButton = new Button(game, delegate()   { cursor.PlacePodMode(PodType.Defense); constructionMenu.Disable(); });
+            defensePodButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_p_defense"), 40);
+            defensePodButton.SetTopLeft(new Vector2(145, 99));
+            constructionMenu.Children.Add(defensePodButton);
+
+            Button branchPodButton = new Button(game, delegate()    { cursor.PlacePodMode(PodType.Branch); constructionMenu.Disable(); });
+            branchPodButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_p_branch"), 40);
+            branchPodButton.SetTopLeft(new Vector2(190, 99));
+            constructionMenu.Children.Add(branchPodButton);
+
+            constructionMenu.Disable();
 
             cursor = new Cursor(game, this);
             InterfaceChildren.Add(cursor);
@@ -140,22 +168,41 @@ namespace global_thermo.Game.Screens
         {
             // The height, then x, y, of each point
             List<Vector2> points = new List<Vector2>();
-            for (uint i = 0; i < e.Count; i += 2)
+            for (uint i = 3; i < e.Count; i += 2)
             {
                 points.Add(new Vector2((float)e.GetInt(i),(float)e.GetInt(i + 1)));
             }
             planet = new Planet(game, new Vector2(0, 0), points);
             Children.Add(planet);
+            planet.Atmo1Rad = e.GetDouble(0);
+            planet.Atmo2Rad = e.GetDouble(1);
+            planet.Atmo3Rad = e.GetDouble(2);
         }
 
         private void net_NewPod(Message e)
         {
-            ResourcePod p = new ResourcePod(game);
+            Pod p = null;
+            switch ((PodType)e.GetInt(2))
+            {
+                case PodType.ResourceG:
+                    p = new GroundResourcePod(game);
+                    break;
+                case PodType.ResourceA1:
+                    p = new Atmo1ResourcePod(game);
+                    break;
+                case PodType.ResourceA2:
+                    p = new Atmo2ResourcePod(game);
+                    break;
+                case PodType.ResourceA3:
+                    p = new Atmo3ResourcePod(game);
+                    break;
+            }
             p.RectPosition = new Vector2((float)e.GetDouble(3), (float)e.GetDouble(4));
-            p.PodID = e.GetInt(2);
-            p.Owner = e.GetInt(1);
-            p.LoadTexture(game.Content.Load<Texture2D>("images/gameplay/resourcePod"));
+            p.PodID = e.GetInt(1);
+            p.Owner = e.GetInt(0);
+            p.Initialize();
             Children.Add(p);
+            
         }
 
         private void net_ResourceInfo(Message e)
@@ -179,12 +226,14 @@ namespace global_thermo.Game.Screens
 
         private void buttonConstruct()
         {
-
+            constructionMenu.Enable();
         }
+
         private void buttonInfo()
         {
-
+            constructionMenu.Disable();
         }
+
         private void buttonTime()
         {
 
@@ -193,6 +242,7 @@ namespace global_thermo.Game.Screens
         private Planet planet;
         private Cursor cursor;
         private SpriteFont debugFont;
+        private GameObjectGroup constructionMenu;
 
         private float scrollSpeed = 400.0f;
     }

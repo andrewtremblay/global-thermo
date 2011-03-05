@@ -7,8 +7,12 @@ namespace global_thermo.Game.Pods
 {
     public enum PodType
     {
+        ResourceAny,
+        ResourceG,
+        ResourceA1,
+        ResourceA2,
+        ResourceA3,
         Residence,
-        Resource,
         Defense,
         Branch
     }
