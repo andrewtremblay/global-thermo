@@ -129,6 +129,9 @@ namespace GlobalThermo {
         private void sendLevelInfo(Player player)
         {
             Message m = Message.Create("LevelInfo");
+            m.Add(world.Atmospheres[0].OuterRadius);
+            m.Add(world.Atmospheres[1].OuterRadius);
+            m.Add(world.Atmospheres[2].OuterRadius);
             foreach (Vector2D pt in world.Landmass)
             {
                 m.Add((int)pt.X);

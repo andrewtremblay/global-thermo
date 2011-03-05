@@ -8,41 +8,51 @@ using Microsoft.Xna.Framework;
 
 namespace global_thermo.Game.Interface
 {
+    // Buttons are assumed to be 3-frame spritesheets: frame 0 = normal, 1 = mouseover, 2 = mousedown
     public class Button : Sprite
     {
         public Button(GlobalThermoGame game, Action callback)
             : base(game)
         {
             this.callback = callback;
+            pressed = false;
         }
 
-        public override void Update(double deltaTime)
+        protected override void updateSelf(double deltaTime)
         {
-            base.Update(deltaTime);
             int mx = Mouse.GetState().X;
             int my = Mouse.GetState().Y;
             Vector2 halfSize = size / 2;
-            Frame = 0;
+
+            // This is the collision check of the mouse cursor over the button rectangle
             if (mx >= (RectPosition - halfSize).X && mx < (RectPosition + halfSize).X &&
                 my >= (RectPosition - halfSize).Y && my < (RectPosition + halfSize).Y)
             {
+                // Record if you've clicked on the button so that we can check later if you let go of the mouse on the button or not
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
                     Frame = 2;
+                    pressed = true;
                 }
                 else
                 {
                     Frame = 1;
                 }
-
+            }
+            else
+            {
+                Frame = 0;
+                pressed = false;
             }
 
-            if (Frame == 2 && Mouse.GetState().LeftButton == ButtonState.Released)
+            // If you let go of the mouse on the button, perform the action
+            if (pressed && Mouse.GetState().LeftButton == ButtonState.Released)
             {
-
+                callback.Invoke();
             }
         }
 
         private Action callback;
+        private bool pressed;
     }
 }

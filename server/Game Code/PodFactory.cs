@@ -28,7 +28,7 @@ namespace GlobalThermo
             Pod connectingPod = null;
 
             // Not right. Ground pods can be placed underground, which doesn't necessarily mean below lava-height
-            if (type == PodType.Resource && location.Magnitude() < world.WaterHeight)
+            if (type == PodType.ResourceAny && location.Magnitude() < world.TrenchHeight)
             {
                 validLocation = true;
             }
@@ -71,11 +71,12 @@ namespace GlobalThermo
             switch (type)
             {
                 // If it's a resource pod, we have to figure out which atmo level you've put it in
-                case PodType.Resource:
+                case PodType.ResourceAny:
                     ResourceType rType = ResourceType.Ground;
+                    type = PodType.ResourceG;
 
                     // Not right. Ground pods can be placed underground, which doesn't necessarily mean below lava-height
-                    if (location.Magnitude() >= world.LavaHeight) 
+                    if (location.Magnitude() >= world.TrenchHeight) 
                     {
                         foreach (Atmosphere atmo in world.Atmospheres)
                         {
@@ -83,6 +84,7 @@ namespace GlobalThermo
                             if (atmo.IsWithin(location))
                             {
                                 rType = atmo.ResourceType;
+                                type = atmo.ResourcePodType;
                             }
                         }
                     }

@@ -10,7 +10,6 @@ namespace global_thermo.Game
     public class Sprite : GameObject
     {
 
-        public bool Visible;
         public Color SpriteColor;
         public int Frame;
 
@@ -18,7 +17,6 @@ namespace global_thermo.Game
             : base(game)
         {
             texture = null;
-            Visible = true;
             SpriteColor = Color.White;
         }
 
@@ -48,9 +46,8 @@ namespace global_thermo.Game
             rectPosition = topLeft + new Vector2(texture.Width / 2, texture.Height / 2);
         }
 
-        public override void Render(Matrix transform)
+        protected override void renderSelf(Matrix transform)
         {
-            base.Render(transform);
             if (texture != null && Visible)
             {
                 game.batch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, transform);

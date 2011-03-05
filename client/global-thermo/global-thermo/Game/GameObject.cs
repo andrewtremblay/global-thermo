@@ -44,6 +44,10 @@ namespace global_thermo.Game
             }
         }
 
+        // While a GameObject doesn't render itself, this will allow you to disable rendering of groups.
+        public bool Visible;
+        public bool Active;
+
         public string DebugName = "unnamed object";
 
         public GameObject(GlobalThermoGame game)
@@ -51,6 +55,8 @@ namespace global_thermo.Game
             this.game = game;
             Children = new List<GameObject>();
             size = new Vector2(0, 0);
+            Visible = true;
+            Active = true;
         }
 
         public virtual void Initialize()
@@ -63,6 +69,27 @@ namespace global_thermo.Game
 
         public virtual void Update(double deltaTime)
         {
+            if (Active)
+            {
+                updateChildren(deltaTime);
+                updateSelf(deltaTime);
+            }
+        }
+
+        public virtual void Render(Matrix transform)
+        {
+            if (Visible)
+            {
+                renderChildren(transform);
+                renderSelf(transform);
+            }
+        }
+
+        protected virtual void updateSelf(double deltaTime) { }
+        protected virtual void renderSelf(Matrix transform) { }
+
+        private void updateChildren(double deltaTime)
+        {
             List<GameObject> childrenCopy = new List<GameObject>(Children);
             foreach (GameObject child in childrenCopy)
             {
@@ -70,7 +97,7 @@ namespace global_thermo.Game
             }
         }
 
-        public virtual void Render(Matrix transform)
+        private void renderChildren(Matrix transform)
         {
             foreach (GameObject child in Children)
             {

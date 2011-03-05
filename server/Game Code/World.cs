@@ -34,9 +34,9 @@ namespace GlobalThermo
             IsGameRunning = true;
             Players = new List<Player>();
             Atmospheres = new List<Atmosphere>();
-            Atmospheres.Add(new Atmosphere(1200, 2400, ResourceType.Atmo1));
-            Atmospheres.Add(new Atmosphere(2400, 3000, ResourceType.Atmo2));
-            Atmospheres.Add(new Atmosphere(3000, 3600, ResourceType.Atmo3));
+            Atmospheres.Add(new Atmosphere(1200, 2400, ResourceType.Atmo1, PodType.ResourceA1));
+            Atmospheres.Add(new Atmosphere(2400, 3000, ResourceType.Atmo2, PodType.ResourceA2));
+            Atmospheres.Add(new Atmosphere(3000, 3600, ResourceType.Atmo3, PodType.ResourceA3));
             LavaHeight = 800;
             WaterHeight = 1800;
             Unreplenishable = 0;
@@ -83,9 +83,9 @@ namespace GlobalThermo
             // Figure out how much the lava should move
             double lavaRate = 0.1;
             double diminish = ((waterMax - LavaHeight) / waterMax) * 1.5 + 0.1; // This makes it grow slower as the lava level rises
-            LavaHeightDelta = (-10.0 + collectors[ResourceType.Atmo1] + collectors[ResourceType.Atmo2] * 2 + collectors[ResourceType.Atmo3] * 3) * lavaRate * timeDelta;
+            //LavaHeightDelta = (-10.0 + collectors[ResourceType.Atmo1] + collectors[ResourceType.Atmo2] * 2 + collectors[ResourceType.Atmo3] * 3) * lavaRate * timeDelta;
 
-            //LavaHeightDelta = 100 * timeDelta; // As a test of the water/lava interactions
+            LavaHeightDelta = 100 * timeDelta; // As a test of the water/lava interactions
 
             LavaHeight = Math.Max(minLavaHeight, LavaHeight + LavaHeightDelta * diminish);
 
@@ -108,7 +108,7 @@ namespace GlobalThermo
                     WaterHeight += timeDelta * waterRegenRate;
                 }
             }
-            if (LavaHeight >= 1620) { LavaHeight = 0; }
+            if (LavaHeight >= 1660) { LavaHeight = 0; }
             WaterHeight = Math.Min(WaterHeight, waterMax - (waterMax - TrenchHeight) * Unreplenishable);
 
             GameTime += timeDelta;

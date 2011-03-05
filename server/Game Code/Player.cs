@@ -67,7 +67,7 @@ namespace GlobalThermo
             double rate = 0;
             foreach (Pod pod in Pods)
             {
-                if (pod.Type == PodType.Resource)
+                if (pod.Type == PodType.ResourceG || pod.Type == PodType.ResourceA1 || pod.Type == PodType.ResourceA2 || pod.Type == PodType.ResourceA3)
                 {
                     rate += ((ResourcePod)pod).GetCollectionRate();
                 }

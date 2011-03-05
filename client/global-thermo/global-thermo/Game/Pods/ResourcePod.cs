@@ -5,7 +5,7 @@ using System.Text;
 
 namespace global_thermo.Game.Pods
 {
-    public class ResourcePod : Pod
+    public abstract class ResourcePod : Pod
     {
         public ResourcePod(GlobalThermoGame game)
             : base(game)

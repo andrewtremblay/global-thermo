@@ -13,6 +13,9 @@ namespace global_thermo.Game
         public Vector2 Center;
         public double LavaRadius;
         public double WaterRadius;
+        public double Atmo1Rad;
+        public double Atmo2Rad;
+        public double Atmo3Rad;
 
         public Planet(GlobalThermoGame game, Vector2 center, List<Vector2> points)
             : base(game)
@@ -22,6 +25,9 @@ namespace global_thermo.Game
             cameraEffect = new BasicEffect(game.GraphicsDevice);
             LavaRadius = 0;
             WaterRadius = 0;
+            Atmo1Rad = 0;
+            Atmo2Rad = 0;
+            Atmo3Rad = 0;
         }
 
         public override void Render(Matrix transform)

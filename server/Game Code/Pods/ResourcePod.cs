@@ -18,7 +18,7 @@ namespace GlobalThermo.Pods
             this.RType = resourceType;
             this.resourceCollectAmt = resourceCollectAmt;
             this.resourceTimer = 0;
-            Type = PodType.Resource;
+            Type = PodType.ResourceAny;
         }
 
         public override void Simulate(double timeDelta)
