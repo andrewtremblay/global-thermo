@@ -15,6 +15,40 @@ namespace GlobalThermo
             newPodId = 0;
         }
 
+        public void CreateCheatPod(PodType type, Player player, Vector2D location, double angle, int connected)
+        {
+            Pod p = null;
+            switch (type)
+            {
+                case PodType.ResourceG:
+                    p = new ResourcePod(player, newPodId, location, ResourceType.Ground, 1.0);
+                    break;
+                case PodType.ResourceA1:
+                    p = new ResourcePod(player, newPodId, location, ResourceType.Atmo1, 1.0);
+                    break;
+                case PodType.ResourceA2:
+                    p = new ResourcePod(player, newPodId, location, ResourceType.Atmo2, 1.0);
+                    break;
+                case PodType.ResourceA3:
+                    p = new ResourcePod(player, newPodId, location, ResourceType.Atmo3, 1.0);
+                    break;
+                case PodType.Residence:
+                    p = new ResidencePod(player, newPodId, location, 4);
+                    break;
+            }
+            newPodId++;
+            foreach (Pod op in player.Pods)
+            {
+                if (op.PodID == connected)
+                {
+                    op.Connectable = false;
+                }
+            }
+            player.Pods.Add(p);
+            world.Game.Broadcast("NewPod", player.Id, p.PodID, (int)type, p.Position.X, p.Position.Y, angle);
+
+        }
+
         public bool CreatePod(PodType type, Player player, Vector2D location)
         {
             Console.WriteLine("CreatePod");
@@ -27,8 +61,10 @@ namespace GlobalThermo
             bool validLocation = false;
             Pod connectingPod = null;
 
+
+
             // Not right. Ground pods can be placed underground, which doesn't necessarily mean below lava-height
-            if (type == PodType.ResourceAny && location.Magnitude() < world.TrenchHeight)
+            if (type == PodType.ResourceAny && player.Pods.Count == 0)
             {
                 validLocation = true;
             }
@@ -76,7 +112,7 @@ namespace GlobalThermo
                     type = PodType.ResourceG;
 
                     // Not right. Ground pods can be placed underground, which doesn't necessarily mean below lava-height
-                    if (location.Magnitude() >= world.TrenchHeight) 
+                    if (player.Pods.Count == 0) 
                     {
                         foreach (Atmosphere atmo in world.Atmospheres)
                         {
@@ -116,7 +152,8 @@ namespace GlobalThermo
                 {
                     connectingPod.Connectable = false;
                 }
-                world.Game.Broadcast("NewPod", player.Id, pod.PodID, (int)type, pod.Position.X, pod.Position.Y);
+                double angle = Math.Atan2(pod.Position.Y, pod.Position.X) + Math.PI / 2;
+                world.Game.Broadcast("NewPod", player.Id, pod.PodID, (int)type, pod.Position.X, pod.Position.Y, angle);
                 return true;
             }
 

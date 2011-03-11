@@ -11,27 +11,20 @@ namespace global_thermo.Game
     {
         public Vector2 Center;
         public double Zoom;
+        public double Angle;
 
         public Camera(Vector2 center, Vector2 windowSize)
         {
             Center = center;
             Zoom = 1.0;
+            Angle = 0.0;
             this.windowSize = windowSize;
         }
 
         public Matrix GetTransform()
         {
-            // Make an identity matrix, translate it, zoom it
-            Matrix mtx = Matrix.Identity;
-            //mtx = Matrix.Multiply(mtx, (float)Zoom);
-            //Matrix mtx = Matrix.CreateScale((float)Zoom, (float)Zoom, 1);
-
-            mtx.Translation = new Vector3(-Center.X + windowSize.X / 2 / (float)Zoom, -Center.Y + windowSize.Y / 2 / (float)Zoom, 0);
-            mtx.M44 = 1.0f / (float)Zoom;
-            //mtx.M12 = (float)Zoom;
-
-            //Console.WriteLine(mtx);
-            
+            Matrix mtx = Matrix.CreateRotationZ((float)Angle) * Matrix.CreateTranslation(-Center.X, -Center.Y, 0) * Matrix.CreateScale((float)Zoom);
+            mtx *= Matrix.CreateTranslation(windowSize.X / 2, windowSize.Y / 2, 0);
             return mtx;
         }
 

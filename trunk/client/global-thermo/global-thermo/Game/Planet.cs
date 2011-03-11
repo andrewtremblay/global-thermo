@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace global_thermo.Game
 {
-    class Planet : Sprite
+    public class Planet : Sprite
     {
         public List<Vector2> Points;
         public Vector2 Center;
@@ -36,14 +36,11 @@ namespace global_thermo.Game
 
             float screenW = game.GraphicsManager.PreferredBackBufferWidth;
             float screenH = game.GraphicsManager.PreferredBackBufferHeight;
-
-            cameraEffect.World = Matrix.Identity;
+            
+            cameraEffect.World = transform;
             Matrix proj = Matrix.CreateOrthographicOffCenter(
-                0,screenW, screenH,0,0,-1f) ;
-            Vector3 translation = new Vector3((transform.Translation.X - screenW / 2 * transform.M44) / (screenW / 2), -(transform.Translation.Y - screenH / 2 * transform.M44) / (screenH / 2), 0);
+                0, screenW, screenH, 0, 0, -1f);
 
-            proj.Translation = translation;
-            proj.M44 = transform.M44;
             cameraEffect.View = Matrix.Identity;
             cameraEffect.Projection = proj;
             cameraEffect.VertexColorEnabled = true;

@@ -38,5 +38,11 @@ namespace global_thermo.Game
             Message m = Message.Create("PlacePod", (int)podType, position.X, position.Y);
             NetConnection.Send(m);
         }
+
+        public void SendPlaceCheatPodMessage(Vector2 position, PodType podType, double angle)
+        {
+            Message m = Message.Create("PlaceCheatPod", (int)podType, position.X, position.Y, angle, 0);
+            NetConnection.Send(m);
+        }
     }
 }

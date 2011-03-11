@@ -58,12 +58,12 @@ namespace global_thermo.Game.Screens
 
         public Vector2 UIToGame(Vector2 vin)
         {
-            return vin + (GameCamera.Center - UICamera.Center);
+            return Vector2.Transform(vin, Matrix.Invert(GameCamera.GetTransform() * UICamera.GetTransform()));
         }
 
         public Vector2 GameToUI(Vector2 vin)
         {
-            return vin + (UICamera.Center - GameCamera.Center);
+            return Vector2.Transform(vin, GameCamera.GetTransform() * UICamera.GetTransform());
         }
 
         public override void Render(Matrix transform)

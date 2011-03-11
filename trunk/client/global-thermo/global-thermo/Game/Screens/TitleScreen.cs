@@ -38,6 +38,10 @@ namespace global_thermo.Game.Screens
             InterfaceChildren.Add(cursor);
 
             base.Initialize();
+            // Test
+            GameCamera.Angle = 0.5;
+            Console.WriteLine(GameCamera.GetTransform());
+            //Console.WriteLine(Matrix.CreateOrthographicOffCenter(0, 800, 600, 0, 0, -1f));
         }
 
         public override void Update(double deltaTime)
@@ -53,10 +57,14 @@ namespace global_thermo.Game.Screens
             // Mouse control
             float y = cursor.RectPosition.Y - menu.RectPosition.Y;
 
+            int oldOption = menuOption;
+
             if (y < -60) { menuOption = 0; }
             else if (y < 8) { menuOption = 1; }
             else if (y < 84) { menuOption = 2; }
             else { menuOption = 3; }
+
+            if (menuOption != oldOption) { cursor.PlayRollover(); }
 
             switch (menuOption)
             {
@@ -70,6 +78,7 @@ namespace global_thermo.Game.Screens
             // Handle clicking
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
+                cursor.PlayClick();
                 if (menuOption == 0)
                 {
                     game.SetScreen(new JoinGameScreen(game));
