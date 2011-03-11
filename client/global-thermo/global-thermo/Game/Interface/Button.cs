@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 
 namespace global_thermo.Game.Interface
 {
@@ -16,6 +17,13 @@ namespace global_thermo.Game.Interface
         {
             this.callback = callback;
             pressed = false;
+        }
+
+        public override void Initialize()
+        {
+            rolloverSnd = game.Content.Load<SoundEffect>("sounds/rollover");
+            clickSnd = game.Content.Load<SoundEffect>("sounds/click");
+            base.Initialize();
         }
 
         protected override void updateSelf(double deltaTime)
@@ -31,11 +39,13 @@ namespace global_thermo.Game.Interface
                 // Record if you've clicked on the button so that we can check later if you let go of the mouse on the button or not
                 if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 {
+                    if (Frame == 1) { PlayClick(); }
                     Frame = 2;
                     pressed = true;
                 }
                 else
                 {
+                    if (Frame == 0) { PlayRollover(); }
                     Frame = 1;
                 }
             }
@@ -54,5 +64,11 @@ namespace global_thermo.Game.Interface
 
         private Action callback;
         private bool pressed;
+
+        public void PlayRollover() { rolloverSnd.Play((float)(game.Rand.NextDouble() * 0.1 + 0.25), (float)(game.Rand.NextDouble() * 0.05), 0.0f); }
+        public void PlayClick() { clickSnd.Play(1.0f, (float)(game.Rand.NextDouble() * 0.1), 0.0f); }
+
+        protected SoundEffect rolloverSnd;
+        protected SoundEffect clickSnd;
     }
 }

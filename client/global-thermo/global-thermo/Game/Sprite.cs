@@ -12,12 +12,14 @@ namespace global_thermo.Game
 
         public Color SpriteColor;
         public int Frame;
+        public double Angle;
 
         public Sprite(GlobalThermoGame game)
             : base(game)
         {
             texture = null;
             SpriteColor = Color.White;
+            Angle = 0;
         }
 
         public override void Initialize()
@@ -53,8 +55,16 @@ namespace global_thermo.Game
                 game.batch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, transform);
                 {
                     Vector2 halfSize = size / 2;
-                    game.batch.Draw(texture, new Rectangle((int)rectPosition.X - (int)halfSize.X, (int)rectPosition.Y - (int)halfSize.Y, (int)size.X, (int)size.Y),
+                    if (Angle == 0)
+                    {
+                        game.batch.Draw(texture, new Rectangle((int)rectPosition.X - (int)halfSize.X, (int)rectPosition.Y - (int)halfSize.Y, (int)size.X, (int)size.Y),
                                     new Rectangle(Frame * (int)size.X, 0, (int)size.X, (int)size.Y), SpriteColor);
+                    }
+                    else
+                    {
+                        game.batch.Draw(texture, new Rectangle((int)rectPosition.X, (int)rectPosition.Y, (int)size.X, (int)size.Y),
+                                    new Rectangle(Frame * (int)size.X, 0, (int)size.X, (int)size.Y), SpriteColor, (float)Angle, new Vector2(halfSize.X, halfSize.Y), SpriteEffects.None, 0);
+                    }
                 }
                 game.batch.End();
             }

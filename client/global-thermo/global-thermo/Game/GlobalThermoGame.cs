@@ -20,6 +20,7 @@ namespace global_thermo
     {
         public GraphicsDeviceManager GraphicsManager;
         public SpriteBatch batch;
+        public Random Rand;
 
         public GlobalThermoGame()
         {
@@ -27,6 +28,7 @@ namespace global_thermo
             GraphicsManager = new GraphicsDeviceManager(this);
             GraphicsManager.PreferMultiSampling = true;
             screen = null;
+            Rand = new Random();
         }
 
         public void SetScreen(Screen screen)

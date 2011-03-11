@@ -7,13 +7,16 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using global_thermo.Game.Pods;
 using global_thermo.Game.Interface;
+using Microsoft.Xna.Framework.Audio;
 
 namespace global_thermo.Game.Screens
 {
     public class GameScreen : Screen
     {
         public List<Resource> Resources;
-        
+        public Pod ConnectingPod;
+        public List<Pod> MyTowers;
+
         public GameScreen(GlobalThermoGame game)
             : base(game)
         {
@@ -22,6 +25,8 @@ namespace global_thermo.Game.Screens
             Resources.Add(new Resource(ResourceType.Atmo1));
             Resources.Add(new Resource(ResourceType.Atmo2));
             Resources.Add(new Resource(ResourceType.Atmo3));
+            MyTowers = new List<Pod>();
+            ConnectingPod = null;
         }
 
         public Resource GetResourceByType(ResourceType rType)
@@ -87,12 +92,19 @@ namespace global_thermo.Game.Screens
             branchPodButton.SetTopLeft(new Vector2(190, 99));
             constructionMenu.Children.Add(branchPodButton);
 
+            resourceGSnd = game.Content.Load<SoundEffect>("sounds/p_resource");
+            resourceA1Snd = game.Content.Load<SoundEffect>("sounds/p_resource");
+            resourceA2Snd = game.Content.Load<SoundEffect>("sounds/p_resource");
+            resourceA3Snd = game.Content.Load<SoundEffect>("sounds/p_resource");
+
             constructionMenu.Disable();
 
-            cursor = new Cursor(game, this);
+            cursor = new GameCursor(game, this);
             InterfaceChildren.Add(cursor);
 
             debugFont = game.Content.Load<SpriteFont>("fonts/Courier New");
+
+            testTex = game.Content.Load<Texture2D>("images/gameplay/position_test");
 
             base.Initialize();
 
@@ -118,9 +130,21 @@ namespace global_thermo.Game.Screens
                 GameCamera.Center.Y -= (float)(deltaTime * scrollSpeed / GameCamera.Zoom);
             }
 
+            //GameCamera.Angle += deltaTime / 50.0;
+
             GameCamera.Zoom = cursor.ZoomLevel;
-            Console.WriteLine(GameCamera.Zoom);
             base.Update(deltaTime);
+        }
+
+        public override void RenderGame(Matrix transform)
+        {
+            base.RenderGame(transform);
+            game.batch.Begin(SpriteSortMode.BackToFront, null, null, null, null, null, transform);
+            {
+                //Vector2 pos = cursor.GamePosition;
+                //game.batch.Draw(testTex, new Rectangle((int)pos.X - 20, (int)pos.Y - 20, 40, 40), Color.White);
+            }
+            game.batch.End();
         }
 
         public override void RenderInterface(Matrix transform)
@@ -136,11 +160,16 @@ namespace global_thermo.Game.Screens
             game.batch.End();
         }
 
+        public Planet GetPlanet() { return planet; }
+
         private void net_HandleMessages(object sender, Message e)
         {
             //Console.WriteLine(e);
             switch (e.Type)
             {
+                case "Join":
+                    myId = e.GetInt(0);
+                    break;
                 case "LevelInfo":
                     net_LevelInfo(e);
                     break;
@@ -186,23 +215,33 @@ namespace global_thermo.Game.Screens
             {
                 case PodType.ResourceG:
                     p = new GroundResourcePod(game);
+                    //resourceGSnd.Play();
                     break;
                 case PodType.ResourceA1:
                     p = new Atmo1ResourcePod(game);
+                    //resourceA1Snd.Play();
                     break;
                 case PodType.ResourceA2:
                     p = new Atmo2ResourcePod(game);
+                    //resourceA2Snd.Play();
                     break;
                 case PodType.ResourceA3:
                     p = new Atmo3ResourcePod(game);
+                    //resourceA3Snd.Play();
                     break;
             }
+            if (ConnectingPod != null)
+            {
+                MyTowers.Remove(ConnectingPod);
+                ConnectingPod = null;
+            }
+            MyTowers.Add(p);
             p.RectPosition = new Vector2((float)e.GetDouble(3), (float)e.GetDouble(4));
+            p.Angle = e.GetDouble(5);
             p.PodID = e.GetInt(1);
             p.Owner = e.GetInt(0);
             p.Initialize();
             Children.Add(p);
-            
         }
 
         private void net_ResourceInfo(Message e)
@@ -240,9 +279,17 @@ namespace global_thermo.Game.Screens
         }
 
         private Planet planet;
-        private Cursor cursor;
+        private GameCursor cursor;
         private SpriteFont debugFont;
         private GameObjectGroup constructionMenu;
+        private Texture2D testTex;
+        private int myId;
+
+        private SoundEffect resourceGSnd;
+        private SoundEffect resourceA1Snd;
+        private SoundEffect resourceA2Snd;
+        private SoundEffect resourceA3Snd;
+        private SoundEffect defenseSnd;
 
         private float scrollSpeed = 400.0f;
     }

@@ -112,6 +112,7 @@
   <ItemGroup>
     <Compile Include="Game\Camera.cs" />
     <Compile Include="Game\Cursor.cs" />
+    <Compile Include="Game\GameCursor.cs" />
     <Compile Include="Game\GameObject.cs" />
     <Compile Include="Game\GameObjectGroup.cs" />
     <Compile Include="Game\Interface\Button.cs" />

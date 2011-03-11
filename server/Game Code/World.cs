@@ -83,9 +83,9 @@ namespace GlobalThermo
             // Figure out how much the lava should move
             double lavaRate = 0.1;
             double diminish = ((waterMax - LavaHeight) / waterMax) * 1.5 + 0.1; // This makes it grow slower as the lava level rises
-            //LavaHeightDelta = (-10.0 + collectors[ResourceType.Atmo1] + collectors[ResourceType.Atmo2] * 2 + collectors[ResourceType.Atmo3] * 3) * lavaRate * timeDelta;
+            LavaHeightDelta = (-10.0 + collectors[ResourceType.Atmo1] + collectors[ResourceType.Atmo2] * 2 + collectors[ResourceType.Atmo3] * 3) * lavaRate * timeDelta;
 
-            LavaHeightDelta = 100 * timeDelta; // As a test of the water/lava interactions
+            //LavaHeightDelta = 100 * timeDelta; // As a test of the water/lava interactions
 
             LavaHeight = Math.Max(minLavaHeight, LavaHeight + LavaHeightDelta * diminish);
 
@@ -137,7 +137,7 @@ namespace GlobalThermo
             for (angle = 0; angle < Math.PI * 2 - 0.005; angle += rand.NextDouble() * 0.005 + 0.005)
             {
                 // Chooses a new height for the land based on the previous height with min and max values
-                dist = Math.Max(Math.Min(dist + rand.NextDouble() * 60 - 30, WaterHeight + 120), TrenchHeight);
+                dist = Math.Max(Math.Min(dist + rand.NextDouble() * 20 - 10, WaterHeight + 120), TrenchHeight);
                 double x = Math.Sin(angle) * dist;
                 double y = -Math.Cos(angle) * dist;
                 Vector2D pt = new Vector2D(x, y);

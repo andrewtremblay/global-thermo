@@ -21,10 +21,11 @@ namespace global_thermo.Game.Pods
     {
         public int PodID;
         public int Owner;
+        public bool Connectable;
         public Pod(GlobalThermoGame game)
             : base(game)
         {
-
+            Connectable = true;
         }
     }
 }

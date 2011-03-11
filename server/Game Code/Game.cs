@@ -47,7 +47,7 @@ namespace GlobalThermo {
 		}
 
 		public override void UserJoined(Player player) {
-            player.Send("Join");
+            player.Send("Join", player.Id);
             sendLevelInfo(player);
             world.Players.Add(player);
             player.world = world;
@@ -65,6 +65,9 @@ namespace GlobalThermo {
 					break;
                 case "PlacePod":
                     podFactory.CreatePod((Pods.PodType)message.GetInt(0), player, new Vector2D(message.GetDouble(1), message.GetDouble(2)));
+                    break;
+                case "PlaceCheatPod":
+                    podFactory.CreateCheatPod((Pods.PodType)message.GetInt(0), player, new Vector2D(message.GetDouble(1), message.GetDouble(2)), message.GetDouble(3), message.GetInt(4));
                     break;
                 case "VoteSpeed":
                     player.SetVoteSpeed(message.GetDouble(0));
