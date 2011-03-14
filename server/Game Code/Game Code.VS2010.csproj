@@ -51,6 +51,8 @@
     <Compile Include="Game.cs" />
     <Compile Include="IGameEntity.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Pods\BranchPod.cs" />
+    <Compile Include="Pods\DefensePod.cs" />
     <Compile Include="Pods\Pod.cs" />
     <Compile Include="PodFactory.cs" />
     <Compile Include="Pods\ResidencePod.cs" />

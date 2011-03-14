@@ -16,6 +16,7 @@ namespace global_thermo.Game
         public double Atmo1Rad;
         public double Atmo2Rad;
         public double Atmo3Rad;
+        public double TrenchRadius;
 
         public Planet(GlobalThermoGame game, Vector2 center, List<Vector2> points)
             : base(game)
@@ -23,6 +24,7 @@ namespace global_thermo.Game
             Center = center;
             Points = points;
             cameraEffect = new BasicEffect(game.GraphicsDevice);
+            TrenchRadius = 0;
             LavaRadius = 0;
             WaterRadius = 0;
             Atmo1Rad = 0;
@@ -48,22 +50,59 @@ namespace global_thermo.Game
             cameraEffect.CurrentTechnique.Passes[0].Apply();
 
 
-            renderWater();
+            game.GraphicsDevice.BlendState = BlendState.Additive;
+            renderCircle(Atmo1Rad, new Color(1.0f, 1.0f, 1.0f, 0.04f), true);
+            renderCircle(Atmo2Rad, new Color(1.0f, 1.0f, 1.0f, 0.05f), true);
+            renderCircle(Atmo3Rad, new Color(1.0f, 1.0f, 1.0f, 0.05f), true);
+            game.GraphicsDevice.BlendState = BlendState.Opaque;
+            renderCircle(WaterRadius, new Color(89, 134, 226), true);
             renderLandmass();
-            renderLava();
+            renderCircle(TrenchRadius, new Color(50, 50, 50), true);
+            renderCircle(LavaRadius, new Color(225, 67, 31), true);
+            
         }
 
-        private void renderLava()
+        private void renderCircleFilled(double radius, Color color)
         {
-            renderCircle1(LavaRadius, new Color(255, 0, 0));
+            
+            int numpts = 128;
+            VertexPositionColorTexture[] pointList = new VertexPositionColorTexture[numpts+1];
+            pointList[0] = new VertexPositionColorTexture(new Vector3(rectPosition.X, rectPosition.Y, 0), color, new Vector2(0, 0));
+            int i;
+            for (i = 1; i < numpts+1; i++)
+            {
+                double angle = (Math.PI * 2 / (numpts-1)) * (float)i;
+                int x = (int)(Math.Cos(-angle) * radius);
+                int y = (int)(-Math.Sin(-angle) * radius);
+                pointList[i] = new VertexPositionColorTexture(new Vector3(x, y, 0), color, new Vector2(0, 0));
+            }
+
+            // Initialize an array of indices of type short.
+            int[] triangleListIndices = new int[numpts * 3];
+            // Populate the array with references to indices in the vertex buffer
+            for (i = 0; i < numpts; i++)
+            {
+                triangleListIndices[i * 3] = 0;
+                triangleListIndices[(i * 3) + 1] = (int)(i + 1);
+                triangleListIndices[(i * 3) + 2] = (int)(i + 2);
+
+            }
+
+            triangleListIndices[(numpts * 3) - 1] = 1;
+
+
+            game.GraphicsDevice.DrawUserIndexedPrimitives<VertexPositionColorTexture>(
+                    PrimitiveType.TriangleList,
+                    pointList,
+                    0,  // vertex buffer offset to add to each element of the index buffer
+                    numpts+1,  // number of vertices to draw
+                    triangleListIndices,
+                    0,  // first index element to read
+                    numpts   // number of primitives to draw
+            );
         }
 
-        private void renderWater()
-        {
-            renderCircle1(WaterRadius, new Color(0, 0, 255));
-        }
-
-        private void renderCircle1(double radius, Color color)
+        private void renderCircleUnfilled(double radius, Color color)
         {
             int numPts = 128;
             VertexPositionColorTexture[] pointList = new VertexPositionColorTexture[numPts];
@@ -74,7 +113,7 @@ namespace global_thermo.Game
                 double angle = (Math.PI * 2 / numPts) * i;
                 int x = (int)(Math.Cos(angle) * radius);
                 int y = (int)(-Math.Sin(angle) * radius);
-                pointList[i] = new VertexPositionColorTexture(new Vector3(x,y,0), color, new Vector2(0,0));
+                pointList[i] = new VertexPositionColorTexture(new Vector3(x, y, 0), color, new Vector2(0, 0));
                 circleIndices[i] = i;
             }
             circleIndices[i] = 0;
@@ -88,12 +127,18 @@ namespace global_thermo.Game
                 numPts);
         }
 
+        private void renderCircle(double radius, Color color, bool fill)
+        {
+            if (fill) { renderCircleFilled(radius, color); }
+            else { renderCircleUnfilled(radius, color);  }
+        }
+
         private void renderLandmass()
         {
-            Color color = new Color(90, 90, 90);
+            Color color = new Color(60, 60, 60);
 
-            int numpts = Points.Count + 1;
-            VertexPositionColorTexture[] pointList = new VertexPositionColorTexture[numpts];
+            int numpts = Points.Count;
+            VertexPositionColorTexture[] pointList = new VertexPositionColorTexture[numpts + 1];
             pointList[0] = new VertexPositionColorTexture(new Vector3(rectPosition.X, rectPosition.Y, 0), color, new Vector2(0, 0));
             int i = 1;
 
@@ -120,10 +165,10 @@ namespace global_thermo.Game
                     PrimitiveType.TriangleList,
                     pointList,
                     0,  // vertex buffer offset to add to each element of the index buffer
-                    numpts,  // number of vertices to draw
+                    numpts+1,  // number of vertices to draw
                     triangleListIndices,
                     0,  // first index element to read
-                    numpts - 1   // number of primitives to draw
+                    numpts   // number of primitives to draw
             );
         }
 

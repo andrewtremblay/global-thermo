@@ -17,31 +17,47 @@ namespace GlobalThermo
 
         public void CreateCheatPod(PodType type, Player player, Vector2D location, double angle, int connected)
         {
+
             Pod p = null;
+            List<Resource> cost = new List<Resource>();
             switch (type)
             {
                 case PodType.ResourceG:
                     p = new ResourcePod(player, newPodId, location, ResourceType.Ground, 1.0);
+                    cost = CalculateResourcePodCost(ResourceType.Ground, location);
                     break;
                 case PodType.ResourceA1:
                     p = new ResourcePod(player, newPodId, location, ResourceType.Atmo1, 1.0);
+                    cost = CalculateResourcePodCost(ResourceType.Atmo1, location);
                     break;
                 case PodType.ResourceA2:
                     p = new ResourcePod(player, newPodId, location, ResourceType.Atmo2, 1.0);
+                    cost = CalculateResourcePodCost(ResourceType.Atmo2, location);
                     break;
                 case PodType.ResourceA3:
                     p = new ResourcePod(player, newPodId, location, ResourceType.Atmo3, 1.0);
+                    cost = CalculateResourcePodCost(ResourceType.Atmo3, location);
                     break;
                 case PodType.Residence:
                     p = new ResidencePod(player, newPodId, location, 4);
+                    cost = CalculateResourcePodCost(ResourceType.Ground, location); // Change
+                    break;
+                case PodType.Branch:
+                    p = new BranchPod(player, newPodId, location);
+                    cost = CalculateResourcePodCost(ResourceType.Ground, location); // Change
+                    break;
+                case PodType.Defense:
+                    p = new DefensePod(player, newPodId, location);
+                    cost = CalculateResourcePodCost(ResourceType.Ground, location); // Change
                     break;
             }
+            if (!player.Pay(cost)) { return; }
             newPodId++;
             foreach (Pod op in player.Pods)
             {
                 if (op.PodID == connected)
                 {
-                    op.Connectable = false;
+                    op.Connect();
                 }
             }
             player.Pods.Add(p);
@@ -79,7 +95,7 @@ namespace GlobalThermo
                         validLocation = false;
                         break;
                     }
-                    if (ppod.Connectable)
+                    if (ppod.IsConnectable())
                     {
                         // Now check if we're between 1 and 3 pod-distances away, and above the connectable pod
                         Vector2D oldPolar = ppod.Position.ToPolar();
@@ -150,7 +166,7 @@ namespace GlobalThermo
                 newPodId++;
                 if (connectingPod != null)
                 {
-                    connectingPod.Connectable = false;
+                    connectingPod.Connect();
                 }
                 double angle = Math.Atan2(pod.Position.Y, pod.Position.X) + Math.PI / 2;
                 world.Game.Broadcast("NewPod", player.Id, pod.PodID, (int)type, pod.Position.X, pod.Position.Y, angle);

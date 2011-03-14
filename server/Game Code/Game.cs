@@ -38,7 +38,7 @@ namespace GlobalThermo {
 				RefreshDebugView(); 
 			}, 250);
 
-            world = new World(this);
+            world = new World(this, int.Parse(RoomData["islands"]));
             podFactory = new PodFactory(world);
 		}
 
@@ -47,7 +47,7 @@ namespace GlobalThermo {
 		}
 
 		public override void UserJoined(Player player) {
-            player.Send("Join", player.Id);
+            player.Send("Join", player.Id, Math.PI * 2 * (player.Id / (1.0 * world.NumIslands)) + Math.PI / 2);
             sendLevelInfo(player);
             world.Players.Add(player);
             player.world = world;
@@ -115,7 +115,7 @@ namespace GlobalThermo {
                 {
                     foreach (Pod pod in p.Pods)
                     {
-                        if (pod.Connectable)
+                        if (pod.IsConnectable())
                         {
                             g.DrawEllipse(Pens.Blue, new Rectangle((int)(pod.Position.X * scale - Pod.Radius * scale + 500), (int)(pod.Position.Y * scale - Pod.Radius * scale + 500), (int)(Pod.Radius * 2 * scale), (int)(Pod.Radius * 2 * scale)));
                         }
@@ -135,6 +135,7 @@ namespace GlobalThermo {
             m.Add(world.Atmospheres[0].OuterRadius);
             m.Add(world.Atmospheres[1].OuterRadius);
             m.Add(world.Atmospheres[2].OuterRadius);
+            m.Add(world.TrenchHeight);
             foreach (Vector2D pt in world.Landmass)
             {
                 m.Add((int)pt.X);

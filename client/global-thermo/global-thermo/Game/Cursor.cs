@@ -23,8 +23,6 @@ namespace global_thermo.Game
         public override void Initialize()
         {
             LoadTexture(game.Content.Load<Texture2D>("images/interface/cursor_base"));
-            rolloverSnd = game.Content.Load<SoundEffect>("sounds/rollover");
-            clickSnd = game.Content.Load<SoundEffect>("sounds/click");
             base.Initialize();
         }
 
@@ -41,15 +39,9 @@ namespace global_thermo.Game
             base.Update(deltaTime);
         }
 
-        public void PlayRollover() { rolloverSnd.Play((float)(game.Rand.NextDouble() * 0.1 + 0.15), (float)(game.Rand.NextDouble() * 0.05), 0.0f); }
-        public void PlayClick() { clickSnd.Play(0.5f, (float)(game.Rand.NextDouble() * 0.1), 0.0f); }
-
         protected MouseState lastState;
         protected MouseState state;
         protected Screen screen;
         protected Vector2 mPosition;
-
-        protected SoundEffect rolloverSnd;
-        protected SoundEffect clickSnd;
     }
 }
