@@ -28,6 +28,7 @@ namespace global_thermo.Game
             cursorMode = CursorMode.Select;
             this.gameScreen = screen;
             ZoomLevel = 1.0;
+            invalidPodLocation = false;
         }
 
         public override void Initialize()
@@ -105,6 +106,9 @@ namespace global_thermo.Game
         {
             switch (placePodType)
             {
+                case PodType.Residence: constructIcon = pResidence; break;
+                case PodType.Defense: constructIcon = pDefense; break;
+                case PodType.Branch: constructIcon = pBranch; break;
                 case PodType.ResourceA1: constructIcon = pResourceA1; break;
                 case PodType.ResourceA2: constructIcon = pResourceA2; break;
                 case PodType.ResourceA3: constructIcon = pResourceA3; break;
@@ -114,38 +118,65 @@ namespace global_thermo.Game
 
             SpriteColor = new Color(1.0f, 1.0f, 1.0f, 0.6f);
 
-            if (placePodType == PodType.ResourceAny || placePodType == PodType.ResourceG ||
-                placePodType == PodType.ResourceA1 || placePodType == PodType.ResourceA2 || placePodType == PodType.ResourceA3)
+            bool near = false;
+            Pod closestPod = null;
+            double dist = double.MaxValue;
+            // First check if we're near a connectable pod
+            foreach (Pod anyp in gameScreen.MyTowers)
             {
-                bool near = false;
-                // First check if we're near a connectable pod
-                foreach (Pod p in gameScreen.MyTowers)
+                double tempdist = (anyp.RectPosition - GamePosition).LengthSquared();
+                if (tempdist < dist)
                 {
-                    if ((GamePosition - p.RectPosition).LengthSquared() < 180 * 180)
-                    {
-                        nearPod = p;
-                        placePodType = PodType.ResourceA1;
-                        Vector2 rdoff = GTMath.RectToPolar(GamePosition - p.RectPosition);
-                        rdoff.Y = Math.Max(Math.Min(rdoff.Y, 110), 60);
-                        if (rdoff.X > Math.PI) { rdoff.X -= 2 * (float)Math.PI; }
-                        rdoff.X = (float)Math.Min(Math.Max((double)rdoff.X, -Math.PI / 4), Math.PI / 4);
-                        GamePosition = p.RectPosition + GTMath.PolarToRect(rdoff);
-                        placePodAngle = GTMath.RectToPolar(GamePosition).X;
-                        near = true;
-                        break;
-                    }
+                    dist = tempdist;
+                    closestPod = anyp;
                 }
-                if (!near)
+            }
+            if (closestPod != null && (GamePosition - closestPod.RectPosition).LengthSquared() < 180 * 180)
+            {
+                nearPod = closestPod;
+
+                // Restrict the distance
+                Vector2 rdoff = GTMath.RectToPolar(GamePosition - closestPod.RectPosition);
+                rdoff.Y = Math.Max(Math.Min(rdoff.Y, 110), 60);
+
+                // Restrict the angle
+                double ad = GTMath.AngleDifference(rdoff.X, closestPod.PolarPosition.X);
+                if (ad > Math.PI / 4) { rdoff.X = closestPod.PolarPosition.X - (float)Math.PI / 4; }
+                else if (ad < -Math.PI / 4) { rdoff.X = closestPod.PolarPosition.X + (float)Math.PI / 4; }
+
+                GamePosition = closestPod.RectPosition + GTMath.PolarToRect(rdoff);
+                placePodAngle = GTMath.RectToPolar(GamePosition).X;
+
+                // Figure out which atmo we're in
+                if (isResource(placePodType))
+                {
+                    Vector2 polar = GTMath.RectToPolar(GamePosition);
+                    if (polar.Y <= gameScreen.GetPlanet().Atmo1Rad) { placePodType = PodType.ResourceA1; }
+                    else if (polar.Y <= gameScreen.GetPlanet().Atmo2Rad) { placePodType = PodType.ResourceA2; }
+                    else { placePodType = PodType.ResourceA3; }
+                }
+                invalidPodLocation = false;
+                near = true;
+            }
+            if (!near)
+            {
+                if(isResource(placePodType))
                 {
                     // Otherwise check the ground
                     Vector2 groundpt = findNearbyGround(out placePodAngle);
                     GamePosition = groundpt;
                     placePodType = PodType.ResourceG;
-                    nearPod = null;
+                    invalidPodLocation = false;
                 }
+                else
+                {
+                    invalidPodLocation = true;
+                }
+                nearPod = null;
             }
+            
 
-            if (JustClicked())
+            if (JustClicked() && !invalidPodLocation)
             {
                 foreach (Pod p in gameScreen.MyTowers)
                 {
@@ -159,6 +190,11 @@ namespace global_thermo.Game
                 //NetManager.GetInstance().SendPlacePodMessage(GamePosition, placePodType);
                 cursorMode = CursorMode.Select;
             }
+        }
+
+        private bool isResource(PodType t)
+        {
+            return t == PodType.ResourceA1 || t == PodType.ResourceA2 || t == PodType.ResourceA3 || t == PodType.ResourceAny || t == PodType.ResourceG;
         }
 
         private void updateInspect(double deltaTime)
@@ -175,11 +211,14 @@ namespace global_thermo.Game
                 {
                     if (nearPod != null)
                     {
-                        game.batch.Draw(constructionWedge, new Rectangle((int)nearPod.RectPosition.X - constructionWedge.Width / 2 + 2, (int)nearPod.RectPosition.Y - constructionWedge.Height + 18, constructionWedge.Width, constructionWedge.Height), Color.White);
+                        game.batch.Draw(constructionWedge, new Rectangle((int)nearPod.RectPosition.X, (int)nearPod.RectPosition.Y, constructionWedge.Width, constructionWedge.Height),
+                            new Rectangle(0, 0, (int)constructionWedge.Width, (int)constructionWedge.Height), Color.White, (float)nearPod.PolarPosition.X, new Vector2(constructionWedge.Width / 2 - 2, constructionWedge.Height - 21), SpriteEffects.None, 0);
                     }
-                    //game.batch.Draw(constructIcon, new Rectangle((int)GamePosition.X - constructIcon.Width / 2, (int)GamePosition.Y - constructIcon.Height / 2, constructIcon.Width, constructIcon.Height), Color.White);
-                    game.batch.Draw(constructIcon, new Rectangle((int)GamePosition.X, (int)GamePosition.Y, (int)constructIcon.Width, (int)constructIcon.Height),
-                                new Rectangle(0, 0, (int)constructIcon.Width, (int)constructIcon.Height), SpriteColor, (float)placePodAngle, new Vector2(constructIcon.Width / 2, constructIcon.Height / 2), SpriteEffects.None, 0);
+                    if (!invalidPodLocation)
+                    {
+                        game.batch.Draw(constructIcon, new Rectangle((int)GamePosition.X, (int)GamePosition.Y, (int)constructIcon.Width, (int)constructIcon.Height),
+                                new Rectangle(0, 0, (int)constructIcon.Width, (int)constructIcon.Height), Color.White, (float)placePodAngle, new Vector2(constructIcon.Width / 2, constructIcon.Height / 2), SpriteEffects.None, 0);
+                    }
                 }
                 game.batch.End();
             }
@@ -220,6 +259,7 @@ namespace global_thermo.Game
         private Pod nearPod;
         private GameScreen gameScreen;
         private double placePodAngle;
+        private bool invalidPodLocation;
 
         private Texture2D constructIcon;
 
@@ -231,6 +271,6 @@ namespace global_thermo.Game
         private Texture2D pBranch;
         private Texture2D pDefense;
         private Texture2D constructionWedge;
-
+        
     }
 }

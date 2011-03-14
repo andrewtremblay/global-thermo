@@ -9,9 +9,9 @@ using global_thermo.Game.Interface;
 
 namespace global_thermo.Game.Screens
 {
-    public class JoinGameScreen : Screen
+    public class HostGameScreen : Screen
     {
-        public JoinGameScreen(GlobalThermoGame game)
+        public HostGameScreen(GlobalThermoGame game)
             : base(game)
         {
             haveRendered = false;
@@ -21,17 +21,28 @@ namespace global_thermo.Game.Screens
         public override void Initialize()
         {
             background = new Sprite(game);
-            background.LoadTexture(game.Content.Load<Texture2D>("images/interface/joinscreen"));
+            background.LoadTexture(game.Content.Load<Texture2D>("images/interface/hostscreen"));
             background.SetTopLeft(new Vector2(0, 0));
             InterfaceChildren.Add(background);
 
-            roomInfoGroup = new GameObjectGroup(game);
-            InterfaceChildren.Add(roomInfoGroup);
+            Button hostButton = new Button(game, clickedHost);
+            hostButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_hostgame"), 77);
+            hostButton.RectPosition = new Vector2(400, 450);
+            InterfaceChildren.Add(hostButton);
+
 
             Button backButton = new Button(game, clickedBack);
             backButton.LoadTexture(game.Content.Load<Texture2D>("images/interface/button_back"), 77);
             backButton.RectPosition = new Vector2(45, 33);
             InterfaceChildren.Add(backButton);
+
+            StringSprite numPlayersSprite = new StringSprite(game, "5");
+            numPlayersSprite.RectPosition = new Vector2(400, 280);
+            InterfaceChildren.Add(numPlayersSprite);
+
+            gameNameSprite = new StringSprite(game, "unnamed game " + game.Rand.Next().ToString());
+            gameNameSprite.RectPosition = new Vector2(400, 165);
+            InterfaceChildren.Add(gameNameSprite);
 
             cursor = new Cursor(game, this);
             InterfaceChildren.Add(cursor);
@@ -44,8 +55,6 @@ namespace global_thermo.Game.Screens
             haveConnected = true;
 
             NetManager.GetInstance().Connect("morgan");
-
-            populateRoomList(NetManager.GetInstance().ListRooms());
         }
 
         public override void Update(double deltaTime)
@@ -55,7 +64,6 @@ namespace global_thermo.Game.Screens
             {
                 Connect();
             }
-            
         }
 
         public override void Render(Matrix transform)
@@ -64,32 +72,16 @@ namespace global_thermo.Game.Screens
             haveRendered = true;
         }
 
+        private void clickedHost()
+        {
+            NetManager.GetInstance().CreateRoom(gameNameSprite.Text, 5);
+            NetManager.GetInstance().NetConnection.OnMessage += new MessageReceivedEventHandler(net_HandleMessages);
+            NetManager.GetInstance().NetConnection.OnDisconnect += new DisconnectEventHandler(net_HandleDisconnect);
+        }
+
         private void clickedBack()
         {
             game.SetScreen(new TitleScreen(game));
-        }
-
-        private void populateRoomList(RoomInfo[] info)
-        {
-            roomInfoGroup.Children = new List<GameObject>();
-            int i = 0;
-            foreach (RoomInfo ri in info)
-            {
-                ClickableStringSprite st = new ClickableStringSprite(game,
-                    ri.Id + " (" + ri.OnlineUsers + "/" + ri.RoomData["islands"] + ")",
-                    delegate() { joinGame(ri.Id); });
-                st.Initialize();
-                st.SetTopLeft(new Vector2(23, 76 + i * 20));
-                roomInfoGroup.Children.Add(st);
-                i++;
-            }
-        }
-
-        private void joinGame(string id)
-        {
-            NetManager.GetInstance().JoinRoom(id);
-            NetManager.GetInstance().NetConnection.OnMessage += new MessageReceivedEventHandler(net_HandleMessages);
-            NetManager.GetInstance().NetConnection.OnDisconnect += new DisconnectEventHandler(net_HandleDisconnect);
         }
 
         private void net_HandleMessages(object sender, Message e)
@@ -104,10 +96,10 @@ namespace global_thermo.Game.Screens
 
         private void net_HandleDisconnect(object sender, string message)
         {
-            
+
         }
 
-        private GameObjectGroup roomInfoGroup;
+        StringSprite gameNameSprite;
         private bool haveRendered;
         private bool haveConnected;
         private Sprite background;

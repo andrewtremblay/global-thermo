@@ -26,11 +26,27 @@ namespace global_thermo.Game
             return INSTANCE;
         }
 
-        public void Connect(String userName, String roomName)
+        public void Connect(String userName)
         {
             NetClient = PlayerIO.Connect("global-thermo-yqmb5es6x0y5gshrcwrzcw", "public", userName, null);
             NetClient.Multiplayer.DevelopmentServer = new PlayerIOClient.ServerEndpoint("127.0.0.1", 8184);
-            NetConnection = NetClient.Multiplayer.CreateJoinRoom(roomName, "MyCode", true, null, null);
+        }
+
+        public void CreateRoom(String roomName, int numIslands)
+        {
+            Dictionary<string, string> data = new Dictionary<string, string>();
+            data["islands"] = numIslands.ToString();
+            NetConnection = NetClient.Multiplayer.CreateJoinRoom(roomName, "MyCode", true, data, null);
+        }
+
+        public void JoinRoom(String id)
+        {
+            NetConnection = NetClient.Multiplayer.JoinRoom(id, null);
+        }
+
+        public RoomInfo[] ListRooms()
+        {
+            return NetClient.Multiplayer.ListRooms("MyCode", new Dictionary<string, string>(), 0, 0);
         }
 
         public void SendPlacePodMessage(Vector2 position, PodType podType)

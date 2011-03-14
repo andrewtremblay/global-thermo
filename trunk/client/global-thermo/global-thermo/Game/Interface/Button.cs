@@ -59,14 +59,15 @@ namespace global_thermo.Game.Interface
             if (pressed && Mouse.GetState().LeftButton == ButtonState.Released)
             {
                 callback.Invoke();
+                pressed = false;
             }
         }
 
         private Action callback;
         private bool pressed;
 
-        public void PlayRollover() { rolloverSnd.Play((float)(game.Rand.NextDouble() * 0.1 + 0.25), (float)(game.Rand.NextDouble() * 0.05), 0.0f); }
-        public void PlayClick() { clickSnd.Play(1.0f, (float)(game.Rand.NextDouble() * 0.1), 0.0f); }
+        public void PlayRollover() { rolloverSnd.Play((float)(game.Rand.NextDouble() * 0.1 + 0.15), (float)(game.Rand.NextDouble() * 0.05), 0.0f); }
+        public void PlayClick() { clickSnd.Play(0.5f, (float)(game.Rand.NextDouble() * 0.1), 0.0f); }
 
         protected SoundEffect rolloverSnd;
         protected SoundEffect clickSnd;

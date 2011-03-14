@@ -78,5 +78,13 @@ namespace global_thermo.Util
             Vector2 junk;
             return SqDistanceToLineSegment(pt, lpt1, lpt2, out junk);
         }
+
+        public static double AngleDifference(double a1, double a2)
+        {
+            double difference = a2 - a1;
+            while (difference < -Math.PI/2) difference += (Math.PI*2);
+            while (difference > Math.PI) difference -= (Math.PI * 2);
+            return difference;
+        }
     }
 }

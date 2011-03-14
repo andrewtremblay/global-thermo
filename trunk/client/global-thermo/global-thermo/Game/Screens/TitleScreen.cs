@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
 
 namespace global_thermo.Game.Screens
 {
@@ -37,6 +38,9 @@ namespace global_thermo.Game.Screens
             cursor = new Cursor(game, this);
             InterfaceChildren.Add(cursor);
 
+            rolloverSnd = game.Content.Load<SoundEffect>("sounds/rollover");
+            clickSnd = game.Content.Load<SoundEffect>("sounds/click");
+
             base.Initialize();
             // Test
             GameCamera.Angle = 0.5;
@@ -64,7 +68,7 @@ namespace global_thermo.Game.Screens
             else if (y < 84) { menuOption = 2; }
             else { menuOption = 3; }
 
-            if (menuOption != oldOption) { cursor.PlayRollover(); }
+            if (menuOption != oldOption) { playRollover(); }
 
             switch (menuOption)
             {
@@ -78,19 +82,31 @@ namespace global_thermo.Game.Screens
             // Handle clicking
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
             {
-                cursor.PlayClick();
+                playClick();
                 if (menuOption == 0)
                 {
                     game.SetScreen(new JoinGameScreen(game));
                 }
+                if (menuOption == 1)
+                {
+                    game.SetScreen(new HostGameScreen(game));
+                }
             }
         }
+
+        private void playRollover() { rolloverSnd.Play((float)(game.Rand.NextDouble() * 0.1 + 0.15), (float)(game.Rand.NextDouble() * 0.05), 0.0f); }
+        private void playClick() { clickSnd.Play(0.5f, (float)(game.Rand.NextDouble() * 0.1), 0.0f); }
 
         private Sprite menuHighlight;
         private Sprite background;
         private Sprite menu;
         private Cursor cursor;
         private int menuOption;
+
+        private SoundEffect clickSnd;
+        private SoundEffect rolloverSnd;
+
     }
 }
+
 

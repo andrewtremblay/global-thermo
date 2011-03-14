@@ -25,13 +25,15 @@ namespace GlobalThermo
         public double BoilThreshold;
         public double Unreplenishable;
         public List<Vector2D> Landmass;
+        public int NumIslands;
 
-        public World(GameCode game)
+        public World(GameCode game, int numIslands)
         {
             Game = game;
             GameTime = 0;
             GameSpeed = 1.0;
             IsGameRunning = true;
+            NumIslands = numIslands;
             Players = new List<Player>();
             Atmospheres = new List<Atmosphere>();
             Atmospheres.Add(new Atmosphere(1200, 2400, ResourceType.Atmo1, PodType.ResourceA1));
